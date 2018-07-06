@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using System.IO;
+using System;
 
 namespace game {
 	public class Account 
@@ -27,7 +30,19 @@ namespace game {
 
 		public static void Save(Account account)
 		{
-			//TODO: save account
+			try
+			{
+				using (StreamWriter writer = new StreamWriter(new FileStream(SAVEFILE_PATH, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
+				{
+					var json_str = JsonConvert.SerializeObject(account, Formatting.Indented);
+					writer.Write(json_str);
+				}
+				Debug.Log("Account saved successfully.");
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError("Account not saved: " + ex.Message);
+			}
 		}
 	}
 }
