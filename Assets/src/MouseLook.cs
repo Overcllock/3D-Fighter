@@ -32,9 +32,11 @@ namespace game
 
             m_CameraTargetRot = ClampRotationAroundXAxis(m_CameraTargetRot);
 
-            //if(Main.self.player != null && !Main.self.player.is_moving)
-                //UpdateRotation(ref character, m_CharacterTargetRot);
-            //UpdateRotation(ref camera, m_CameraTargetRot);
+            if(m_cursorIsLocked)
+            {
+                UpdateRotation(ref character, m_CharacterTargetRot);
+                UpdateRotation(ref camera, m_CameraTargetRot);
+            }
 
             UpdateCursorLock();
         }
