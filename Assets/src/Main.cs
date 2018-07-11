@@ -6,6 +6,7 @@ namespace game {
 	public class Main : MonoBehaviour {
 		public static Main self = null;
 		public Account account = null;
+		public Character player = null;
 
 		void Awake()
 		{
@@ -15,6 +16,7 @@ namespace game {
 		void Start () 
 		{
 			account = Account.Load() ?? new Account();
+			player = Character.Load(account);
 		}
 		
 		void Update () 
