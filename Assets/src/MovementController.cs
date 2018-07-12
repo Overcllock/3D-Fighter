@@ -9,12 +9,12 @@ namespace game
 	public class MovementController : MonoBehaviour 
 	{
 		CharacterController cctl;
-		Camera cam;
 		Animator animator;
-		vThirdPersonCamera t_cam;
+		vThirdPersonCamera cam;
 
-		public float speed = 2.0f;
+		public float speed = 5.0f;
 		public float speed_smooth_time = 0.1f;
+		public float strafe_rotation_speed = 10f;
 		public bool moving_allowed = true;
 
 		float current_speed;
@@ -24,11 +24,10 @@ namespace game
 		{
 			cctl = gameObject.GetComponent<CharacterController>();
 			animator = gameObject.GetComponent<Animator>();
-			cam = Camera.main;
-			t_cam = cam.gameObject.GetComponent<vThirdPersonCamera>();
+			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
 		}
 		
-		void LateUpdate() 
+		void FixedUpdate() 
 		{
 			if(moving_allowed)
 				Move();
@@ -48,11 +47,19 @@ namespace game
 			current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref speed_smooth_velocity, speed_smooth_time);
 
 			var velocity = Vector3.ClampMagnitude(directory * current_speed, speed);
-			cctl.Move(velocity * Time.deltaTime);
-			t_cam.RotateCamera(mouse_input.x, mouse_input.y);
+			cctl.Move(velocity * Time.fixedDeltaTime);
+
+			cam.RotateCamera(mouse_input.x, mouse_input.y);
+			RotateWithAnotherTransform(cam.transform);
 
 			current_speed = new Vector2(cctl.velocity.x, cctl.velocity.z).magnitude;
 		}
+
+		void RotateWithAnotherTransform(Transform referenceTransform)
+        {
+            var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y, transform.eulerAngles.z);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), strafe_rotation_speed * Time.fixedDeltaTime);
+        }
 
 		Vector3 GetDirectory()
 		{
