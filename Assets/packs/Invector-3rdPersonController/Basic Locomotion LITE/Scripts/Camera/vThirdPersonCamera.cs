@@ -31,6 +31,7 @@ public class vThirdPersonCamera : MonoBehaviour
     public LayerMask cullingLayer = 1 << 0;                
     [Tooltip("Debug purposes, lock the camera behind the character for better align the states")]
     public bool lockCamera = true;
+    public bool hideCursor = false;
     public bool cutsceneMode = true;
     
     public float rightOffset = 0f;
@@ -109,6 +110,9 @@ public class vThirdPersonCamera : MonoBehaviour
     void FixedUpdate()
     {
         if (target == null || targetLookAt == null) return;
+
+        hideCursor = cutsceneMode ? false : !Input.GetKey(KeyCode.LeftAlt);
+        Cursor.visible = !hideCursor;
 
         CameraMovement();
 

@@ -6,9 +6,10 @@ namespace game {
 	public class Main : MonoBehaviour {
 		public static Main self = null;
 		public Account account = null;
-		public Character player = null;
+		public UI ui_root;
+		public Character player;
 
-		public bool is_ui_active = true;
+		const float autosave_interval = 60.0f;
 
 		void Awake()
 		{
@@ -18,7 +19,10 @@ namespace game {
 		void Start () 
 		{
 			account = Account.Load() ?? new Account();
-			player = Character.Load(account);
+
+			ui_root.Open("prefabs/MainMenu");
+
+			StartCoroutine(AutoSave());
 		}
 		
 		void Update () 
@@ -30,6 +34,16 @@ namespace game {
 		{
 			if(account != null)
 				Account.Save(account);
+		}
+
+		IEnumerator AutoSave(bool repeat = true)
+		{
+			do
+			{
+				Account.Save(account);
+				yield return new WaitForSecondsRealtime(autosave_interval);
+			}
+			while(repeat);
 		}
 	}
 }

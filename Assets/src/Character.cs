@@ -13,14 +13,29 @@ namespace game
 
 		void Start()
 		{
+			Init();
+		}
+
+		void Init()
+		{
 			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
 		}
 
-		public void OnSpawned()
+		public void Spawn()
+		{
+			transform.position = GameObject.Find("startpoint_1").transform.position;
+			gameObject.SetActive(true);
+			Init();
+			OnSpawned();
+		}
+
+		void OnSpawned()
 		{
 			is_spawned = true;
 			cam.SetMainTarget(transform);
 			cam.lockCamera = false;
+			cam.cutsceneMode = false;
+			GameObject.Find("bird").SetActive(false);
 		}
 
 		public static Character Load(Account data)

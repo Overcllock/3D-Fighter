@@ -14,6 +14,48 @@ namespace game
 			return t.gameObject;
 		}
 
+		public static GameObject CreateChild(this GameObject o, Object prefab)
+		{
+			return GameObject.Instantiate(prefab, o.transform) as GameObject;
+		}
+
+		public static Transform FindRecursive(this Transform current, string name, bool depth_first = true)   
+		{
+			if(!depth_first)
+			{
+				if(current.parent)
+				{
+					if(current.parent.Find(name) == current)
+						return current;
+				}
+				//NOTE: switching to mem-allocating version only if there's no parent
+				else if(current.name == name)
+					return current;
+			}
+
+			for(int i = 0; i < current.childCount; ++i)
+			{
+				var chld = current.GetChild(i); 
+				var tmp = chld.FindRecursive(name);
+				if(tmp != null)
+					return tmp;
+			}
+
+			if(depth_first)
+			{
+				if(current.parent)
+				{
+					if(current.parent.Find(name) == current)
+						return current;
+				}
+				//NOTE: switching to mem-allocating version only if there's no parent
+				else if(current.name == name)
+					return current;
+			}
+
+			return null;
+		}
+
 		public static float ToOffset(this Vector3 vec, Transform t)
 		{
 			float offset = 0.0f;
