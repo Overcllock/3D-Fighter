@@ -13,5 +13,19 @@ namespace game
 				Debug.LogError("Child not found " + name);
 			return t.gameObject;
 		}
+
+		public static float ToOffset(this Vector3 vec, Transform t)
+		{
+			float offset = 0.0f;
+			
+			if(vec == -t.forward)
+				offset = 180.0f;
+			else if(vec == t.right)
+				offset = 90.0f;
+			else if(vec == -t.right)
+				offset = -90.0f;
+
+			return offset;
+		}
 	}
 }

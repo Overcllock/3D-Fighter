@@ -33,13 +33,16 @@ public class vThirdPersonCamera : MonoBehaviour
     public bool lockCamera;
     
     public float rightOffset = 0f;
-    public float defaultDistance = 2.5f;
+    public float defaultDistance = 3f;
+    public float minDistance = 2f;
+    public float maxDistance = 8f;
     public float height = 1.4f;
     public float smoothFollow = 10f;
     public float xMouseSensitivity = 3f;
     public float yMouseSensitivity = 3f;
     public float yMinLimit = -40f;
     public float yMaxLimit = 80f; 
+    public float zoomingSpeed = 6f;
     #endregion
 
     #region hide properties    
@@ -107,6 +110,7 @@ public class vThirdPersonCamera : MonoBehaviour
         if (target == null || targetLookAt == null) return;
 
         CameraMovement();
+        ZoomCamera(Input.mouseScrollDelta.y);
     }
 
 
@@ -161,6 +165,13 @@ public class vThirdPersonCamera : MonoBehaviour
             mouseY = currentTarget.root.localEulerAngles.x;
             mouseX = currentTarget.root.localEulerAngles.y;
         }
+    }
+
+    public void ZoomCamera(float delta)
+    {
+        var dist = defaultDistance - delta;
+        dist = Mathf.Clamp(dist, minDistance, maxDistance);
+        defaultDistance = Mathf.Lerp(defaultDistance, dist, zoomingSpeed * Time.deltaTime);
     }
 
     /// <summary>
