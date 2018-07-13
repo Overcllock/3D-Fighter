@@ -68,7 +68,7 @@ namespace game
 			float target_speed = speed * input_directory.magnitude;
 			current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref speed_smooth_velocity, speed_smooth_time);
 
-			var velocity = Vector3.ClampMagnitude(transform.forward * current_speed, speed);
+			var velocity = Vector3.ClampMagnitude(transform.forward * current_speed, target_speed);
 			cctl.Move(velocity * Time.fixedDeltaTime);
 
 			cam.RotateCamera(mouse_input.x, mouse_input.y);
