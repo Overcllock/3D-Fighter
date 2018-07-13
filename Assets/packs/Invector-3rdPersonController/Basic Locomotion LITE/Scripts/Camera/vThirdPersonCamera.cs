@@ -30,7 +30,8 @@ public class vThirdPersonCamera : MonoBehaviour
     [Tooltip("What layer will be culled")]
     public LayerMask cullingLayer = 1 << 0;                
     [Tooltip("Debug purposes, lock the camera behind the character for better align the states")]
-    public bool lockCamera;
+    public bool lockCamera = true;
+    public bool cutsceneMode = true;
     
     public float rightOffset = 0f;
     public float defaultDistance = 3f;
@@ -110,7 +111,12 @@ public class vThirdPersonCamera : MonoBehaviour
         if (target == null || targetLookAt == null) return;
 
         CameraMovement();
-        ZoomCamera(Input.mouseScrollDelta.y);
+
+        if(!lockCamera)
+            ZoomCamera(Input.mouseScrollDelta.y);
+
+        if(cutsceneMode)
+            AutoRotateCamera();
     }
 
 
@@ -167,6 +173,12 @@ public class vThirdPersonCamera : MonoBehaviour
         }
     }
 
+    public void AutoRotateCamera()
+    {
+        mouseY = currentTarget.root.localEulerAngles.x;
+        mouseX = currentTarget.root.localEulerAngles.y;
+    }
+
     public void ZoomCamera(float delta)
     {
         var dist = defaultDistance - delta;
@@ -182,9 +194,9 @@ public class vThirdPersonCamera : MonoBehaviour
         if (currentTarget == null)
             return;
 
-        distance = Mathf.Lerp(distance, defaultDistance, smoothFollow * Time.deltaTime);
+        distance = Mathf.Lerp(distance, defaultDistance, smoothFollow * Time.fixedDeltaTime);
         //_camera.fieldOfView = fov;
-        cullingDistance = Mathf.Lerp(cullingDistance, distance, Time.deltaTime);
+        cullingDistance = Mathf.Lerp(cullingDistance, distance, Time.fixedDeltaTime);
         var camDir = (forward * targetLookAt.forward) + (rightOffset * targetLookAt.right);
 
         camDir = camDir.normalized;
@@ -225,20 +237,22 @@ public class vThirdPersonCamera : MonoBehaviour
             currentHeight = height;
         }
         //Check if target position with culling height applied is not blocked
-        if (CullingRayCast(current_cPos, planePoints, out hitInfo, distance, cullingLayer, Color.cyan)) distance = Mathf.Clamp(cullingDistance, 0.0f, defaultDistance);
+        if (CullingRayCast(current_cPos, planePoints, out hitInfo, distance, cullingLayer, Color.cyan)) 
+            distance = Mathf.Clamp(cullingDistance, 0.0f, defaultDistance);
         var lookPoint = current_cPos + targetLookAt.forward * 2f;
         lookPoint += (targetLookAt.right * Vector3.Dot(camDir * (distance), targetLookAt.right));
         targetLookAt.position = current_cPos;
 
         Quaternion newRot = Quaternion.Euler(mouseY, mouseX, 0);
-        targetLookAt.rotation = Quaternion.Slerp(targetLookAt.rotation, newRot, smoothCameraRotation * Time.deltaTime);
+
+        targetLookAt.rotation = Quaternion.Slerp(targetLookAt.rotation, newRot, smoothCameraRotation * Time.fixedDeltaTime);
         transform.position = current_cPos + (camDir * (distance));
-        var rotation = Quaternion.LookRotation((lookPoint) - transform.position);
+        var rotation = Quaternion.LookRotation(lookPoint - transform.position);
 
-        //lookTargetOffSet = Vector3.Lerp(lookTargetOffSet, Vector3.zero, 1 * Time.fixedDeltaTime);
-
-        //rotation.eulerAngles += rotationOffSet + lookTargetOffSet;
-        transform.rotation = rotation;
+        if(cutsceneMode)
+            transform.rotation = currentTarget.rotation;
+        else
+            transform.rotation = rotation;
         movementSpeed = Vector2.zero;
     }
 

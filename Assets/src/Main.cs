@@ -8,6 +8,8 @@ namespace game {
 		public Account account = null;
 		public Character player = null;
 
+		public bool is_ui_active = true;
+
 		void Awake()
 		{
 			self = this;
