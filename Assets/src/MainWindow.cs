@@ -9,7 +9,7 @@ namespace game
 		void Start() 
 		{
 			MakeButton("but_play", OnPlay);
-			MakeButton("but_exit", OnExit);
+			MakeButton("but_exit", Main.self.ForceQuit);
 		}
 
 		public void OnPlay()
@@ -18,11 +18,6 @@ namespace game
 			Close();
 			Destroy(gameObject);
 			Main.self.player.Spawn();
-		}
-
-		public void OnExit()
-		{
-			Application.Quit();
 		}
 	}
 }

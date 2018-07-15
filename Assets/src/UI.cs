@@ -34,7 +34,7 @@ namespace game
 	{
 		protected UI root;
 
-		void Start()
+		void Awake()
 		{
 			root = Main.self.ui_root;
 		}

@@ -19,8 +19,11 @@ namespace game {
 		void Start () 
 		{
 			account = Account.Load() ?? new Account();
-
-			ui_root.Open("prefabs/MainMenu");
+			
+			if(account.IsValid)
+				ui_root.Open("prefabs/MainMenu");
+			else
+				ui_root.Open("prefabs/SignUp");
 
 			StartCoroutine(AutoSave());
 		}
@@ -28,6 +31,11 @@ namespace game {
 		void Update () 
 		{
 			
+		}
+
+		public void ForceQuit()
+		{
+			Application.Quit();
 		}
 
 		public void OnApplicationQuit()
@@ -40,7 +48,8 @@ namespace game {
 		{
 			do
 			{
-				Account.Save(account);
+				if(account != null && account.IsValid)
+					Account.Save(account);
 				yield return new WaitForSecondsRealtime(autosave_interval);
 			}
 			while(repeat);

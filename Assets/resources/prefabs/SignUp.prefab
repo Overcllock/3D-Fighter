@@ -102,6 +102,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224907328439327398}
+  - component: {fileID: 114611331415376674}
   m_Layer: 5
   m_Name: SignUp
   m_TagString: Untagged
@@ -292,7 +293,7 @@ GameObject:
   - component: {fileID: 114902744932047706}
   - component: {fileID: 114159646067780900}
   m_Layer: 5
-  m_Name: entry field
+  m_Name: input_name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -481,7 +482,7 @@ MonoBehaviour:
   m_LineType: 0
   m_HideMobileInput: 0
   m_CharacterValidation: 0
-  m_CharacterLimit: 0
+  m_CharacterLimit: 15
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -869,6 +870,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114611331415376674
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1529078344894594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4456f5b79007c14f843f0df5e5bd6aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114691483343991578
 MonoBehaviour:
   m_ObjectHideFlags: 1

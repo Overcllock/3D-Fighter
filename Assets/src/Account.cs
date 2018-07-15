@@ -10,22 +10,55 @@ namespace game {
 	{
 		public static readonly string SAVEFILE_PATH = "userdata/account.json";
 
+		public string name;
 		public uint rate;
 		public EnumLeague league;
 		public uint wins;
 		public uint loses;
 		public float winrate;
 
+		public bool IsValid 
+		{
+			get { return name != string.Empty; }
+		}
+
 		public Account()
 		{
+			name = string.Empty;
+			rate = 1000;
+			league = EnumLeague.BRONZE;
+		}
+
+		public Account(string name)
+		{
+			this.name = name;
 			rate = 1000;
 			league = EnumLeague.BRONZE;
 		}
 
 		public static Account Load()
 		{
-			//TODO: load account
-			return new Account();
+			try
+			{
+				Account account;
+				using (StreamReader reader = new StreamReader(new FileStream(SAVEFILE_PATH, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
+				{
+					account = JsonConvert.DeserializeObject<Account>(reader.ReadToEnd());
+				}
+
+				if(account != null)
+				{
+					Debug.Log("Account loaded successfully.");
+					return account;
+				}
+
+				throw new Exception("user data is null or empty.");
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError("Account not loaded: " + ex.Message);
+				return new Account();
+			}
 		}
 
 		public static void Save(Account account)
