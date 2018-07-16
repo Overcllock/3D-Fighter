@@ -37,11 +37,5 @@ namespace game
 			cam.cutsceneMode = false;
 			GameObject.Find("bird").SetActive(false);
 		}
-
-		public static Character Load(Account data)
-		{
-			//TODO: load character
-			return new Character();
-		}
 	}
 }

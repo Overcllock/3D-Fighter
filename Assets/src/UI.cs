@@ -14,11 +14,6 @@ namespace game
 		{
 			windows = new List<UIWindow>();
 		}
-		
-		void Update() 
-		{
-			
-		}
 
 		public void Open(string prefab)
 		{

@@ -61,6 +61,9 @@ namespace game {
 		{
 			try
 			{
+				if(!Directory.Exists("userdata"))
+					Directory.CreateDirectory("userdata");
+
 				Account account;
 				using (StreamReader reader = new StreamReader(new FileStream(SAVEFILE_PATH, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
 				{
@@ -86,6 +89,9 @@ namespace game {
 		{
 			try
 			{
+				if(!Directory.Exists("userdata"))
+					Directory.CreateDirectory("userdata");
+
 				using (StreamWriter writer = new StreamWriter(new FileStream(SAVEFILE_PATH, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
 				{
 					var json_str = JsonConvert.SerializeObject(account, Formatting.Indented);
