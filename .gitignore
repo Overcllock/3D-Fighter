@@ -4,6 +4,7 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
+[Uu]serdata/
 
 # Visual Studio cache directory
 .vs/
@@ -35,6 +36,3 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-
-#Other
-userdata/
