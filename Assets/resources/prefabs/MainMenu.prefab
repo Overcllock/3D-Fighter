@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 222292226000749114}
   - component: {fileID: 114280156535573356}
   m_Layer: 5
-  m_Name: info_victory
+  m_Name: victory_txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 222142955707628848}
   - component: {fileID: 114317562391139554}
   m_Layer: 5
-  m_Name: info_rating
+  m_Name: rate_txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 222429853365327406}
   - component: {fileID: 114557667945244606}
   m_Layer: 5
-  m_Name: info_defeat
+  m_Name: defeat_txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 222640013380329060}
   - component: {fileID: 114113054662835430}
   m_Layer: 5
-  m_Name: Text
+  m_Name: rank_txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

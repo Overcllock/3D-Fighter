@@ -9,14 +9,37 @@ namespace game {
 	public class Account 
 	{
 		public static readonly string SAVEFILE_PATH = "userdata/account.json";
+		public static readonly uint BRONZE_RATE = 1300;
+		public static readonly uint SILVER_RATE = 1350;
+		public static readonly uint GOLD_RATE = 1600;
+		public static readonly uint PLATINUM_RATE = 1900;
+
 
 		public string name;
 		public uint rate;
-		public EnumLeague league;
+		[JsonIgnore]
+		public EnumLeague league
+		{
+			get
+			{
+				if(rate < SILVER_RATE) return EnumLeague.BRONZE;
+				if(rate < GOLD_RATE) return EnumLeague.SILVER;
+				if(rate < PLATINUM_RATE) return EnumLeague.GOLD;
+				else return EnumLeague.PLATINUM;
+			}
+		}
 		public uint wins;
 		public uint loses;
-		public float winrate;
-
+		[JsonIgnore]
+		public uint winrate 
+		{
+			get
+			{
+				float rate = wins > 0 ? (float)wins / (float)(wins + loses) : 0;
+				return (uint)Mathf.RoundToInt(rate * 100);
+			}
+		}
+		[JsonIgnore]
 		public bool IsValid 
 		{
 			get { return name != string.Empty; }
@@ -25,15 +48,13 @@ namespace game {
 		public Account()
 		{
 			name = string.Empty;
-			rate = 1000;
-			league = EnumLeague.BRONZE;
+			rate = BRONZE_RATE;
 		}
 
 		public Account(string name)
 		{
 			this.name = name;
-			rate = 1000;
-			league = EnumLeague.BRONZE;
+			rate = BRONZE_RATE;
 		}
 
 		public static Account Load()

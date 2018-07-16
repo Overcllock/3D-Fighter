@@ -28,6 +28,17 @@ namespace game
 			if(window != null)
 				windows.Add(window);
 		}
+
+		public T Find<T>() where T : UIWindow
+		{
+			for(int i = 0; i < windows.Count; ++i)
+			{
+				var window = windows[i];
+				if(window is T)
+					return window as T;
+			}
+			return null;
+		}
 	}
 
 	public abstract class UIWindow : MonoBehaviour
@@ -52,6 +63,11 @@ namespace game
 			var button = btn_go.GetComponent<Button>();
 			if(button != null)
 				button.onClick.AddListener(func);
+		}
+
+		protected T GetUIComponent<T>(string name) where T : Component
+		{
+			return transform.FindRecursive(name).GetComponent<T>();
 		}
 	}
 }

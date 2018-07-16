@@ -1,9 +1,6 @@
 {
-  "name": "Tsar",
-  "rate": 1000,
-  "league": 0,
-  "wins": 0,
-  "loses": 0,
-  "winrate": 0.0,
-  "IsValid": true
+  "name": "Wellenberg",
+  "rate": 1613,
+  "wins": 65,
+  "loses": 48
 }
