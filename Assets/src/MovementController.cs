@@ -83,6 +83,12 @@ namespace game
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), strafe_rotation_speed * Time.fixedDeltaTime);
         }
 
+		public void MoveForward(float speed)
+		{
+			var velocity = transform.forward * speed;
+			cctl.Move(velocity * Time.deltaTime);
+		}
+
 		Vector3 GetDirectory()
 		{
 			if(last_input.Count == 0) 

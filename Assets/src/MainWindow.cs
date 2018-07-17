@@ -19,6 +19,7 @@ namespace game
 			//TODO:
 			Close();
 			Destroy(gameObject);
+			root.Open("prefabs/HUD");
 			Main.self.player.Spawn();
 		}
 
@@ -39,14 +40,17 @@ namespace game
 
 			switch(acc.league)
 			{
+				case EnumLeague.SILVER:
+					league_info.sprite = Resources.Load<Sprite>("sprites/rank_silver");
+					break;
 				case EnumLeague.GOLD:
-					league_info.sprite = Resources.Load<Sprite>("sprites/UI Fighter_button2");
+					league_info.sprite = Resources.Load<Sprite>("sprites/button-rank_gold");
 					break;
 				case EnumLeague.PLATINUM:
-					league_info.sprite = Resources.Load<Sprite>("sprites/UI Fighter_button3");
+					league_info.sprite = Resources.Load<Sprite>("sprites/rank_platinum");
 					break;
 				default:
-					league_info.sprite = Resources.Load<Sprite>("sprites/UI Fighter_button");
+					league_info.sprite = Resources.Load<Sprite>("sprites/rank_bronze");
 					break;
 			}
 		}

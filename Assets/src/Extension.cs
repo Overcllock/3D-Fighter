@@ -6,6 +6,28 @@ namespace game
 {
 	public static class Extensions
 	{
+		public static Ability FindByKey(this List<Ability> abs, EnumAbilitesKeys key)
+		{
+			for(int i = 0; i < abs.Count; ++i)
+			{
+				var ab = abs[i];
+				if(ab.key == key)
+					return ab;
+			}
+			return null;
+		}
+
+		public static Ability FindByKey(this List<Ability> abs, KeyCode key)
+		{
+			for(int i = 0; i < abs.Count; ++i)
+			{
+				var ab = abs[i];
+				if((KeyCode)ab.key == key)
+					return ab;
+			}
+			return null;
+		}
+
 		public static GameObject GetChild(this GameObject o, string name)
 		{
 			Transform t = o.transform.Find(name);

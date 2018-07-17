@@ -21,8 +21,9 @@ GameObject:
   - component: {fileID: 224110473377078008}
   - component: {fileID: 212352050871503162}
   - component: {fileID: 95423516820166144}
+  - component: {fileID: 114090539686679834}
   m_Layer: 5
-  m_Name: BattleMode
+  m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2409,6 +2410,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114090539686679834
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006524430912418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a0bdd64c9d2c445d850bb1c8fb8b05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114106171301222438
 MonoBehaviour:
   m_ObjectHideFlags: 1

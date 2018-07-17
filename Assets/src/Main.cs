@@ -11,9 +11,33 @@ namespace game {
 
 		const float autosave_interval = 60.0f;
 
+		public KeyCode[] all_keys;
+		public EnumAbilitesKeys[] all_abilites_keys;
+
 		void Awake()
 		{
 			self = this;
+
+			all_keys = new KeyCode[] {
+				(KeyCode)EnumAbilitesKeys.KEY_1,
+				(KeyCode)EnumAbilitesKeys.KEY_2,
+				(KeyCode)EnumAbilitesKeys.KEY_E,
+				(KeyCode)EnumAbilitesKeys.KEY_F,
+				(KeyCode)EnumAbilitesKeys.KEY_Q,
+				(KeyCode)EnumAbilitesKeys.KEY_TAB
+			};
+
+			all_abilites_keys = new EnumAbilitesKeys[] {
+				EnumAbilitesKeys.KEY_LMB_1,
+				EnumAbilitesKeys.KEY_LMB_2,
+				EnumAbilitesKeys.KEY_RMB,
+				EnumAbilitesKeys.KEY_1,
+				EnumAbilitesKeys.KEY_2,
+				EnumAbilitesKeys.KEY_E,
+				EnumAbilitesKeys.KEY_F,
+				EnumAbilitesKeys.KEY_Q,
+				EnumAbilitesKeys.KEY_TAB
+			};
 		}
 
 		void Start () 
