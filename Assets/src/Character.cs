@@ -106,7 +106,7 @@ namespace game
 			float dt = 0;
 			while(dt < delay)
 			{
-				mctl.MoveForward(5.0f);
+				mctl.MoveForward(6.0f);
 				dt += Time.deltaTime;
 				yield return new WaitForFixedUpdate();
 			}
@@ -127,12 +127,13 @@ namespace game
 			else
 				animator.Play(statename, 0);
 			
-			StartCoroutine(ResetActiveAbility(delay));
+			StartCoroutine(AnimDefer(delay));
 		}
 
-		IEnumerator ResetActiveAbility(float delay = 0.0f)
+		IEnumerator AnimDefer(float delay = 0.0f)
 		{
 			yield return new WaitForSecondsRealtime(delay);
+			active_ability.Defer();
 			active_ability = null;
 		}
 

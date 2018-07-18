@@ -55,7 +55,7 @@ namespace game
 				Move();
 
 			Main.self.player.is_moving = cctl.velocity.magnitude > 0.6f;
-			animator.SetBool("Run", Main.self.player.is_moving);
+			animator.SetBool("Run", Main.self.player.is_moving && Main.self.player.active_ability == null);
 		}
 
 		void Move()

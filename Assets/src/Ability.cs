@@ -27,6 +27,7 @@ namespace game
 			inflictor.PlayAnim(anim_state, is_animlock, delay);
 		}
 		public abstract bool CheckConditions();
+		public virtual void Defer() { }
 
 		public void TickCooldown()
 		{
@@ -145,7 +146,7 @@ namespace game
 		{
 			key = EnumAbilitesKeys.KEY_1;
 			anim_state = "Land";
-			delay = 0.25f;
+			delay = 0.5f;
 			is_animlock = true;
 		}
 
@@ -153,12 +154,18 @@ namespace game
 		{
 			//TODO:
 			base.Use();
+			inflictor.mctl.moving_allowed = false;
 		}
 
 		public override bool CheckConditions()
 		{
 			//TODO:
 			return true;
+		}
+
+		public override void Defer()
+		{
+			inflictor.mctl.moving_allowed = true;
 		}
 	}
 
@@ -183,7 +190,7 @@ namespace game
 		{
 			key = EnumAbilitesKeys.KEY_2;
 			anim_state = "ScrewK";
-			delay = 0.7f;
+			delay = 1.2f;
 			is_animlock = true;
 		}
 
@@ -199,6 +206,11 @@ namespace game
 		{
 			//TODO:
 			return true;
+		}
+
+		public override void Defer()
+		{
+			inflictor.mctl.moving_allowed = true;
 		}
 	}
 
