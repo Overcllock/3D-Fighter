@@ -6,11 +6,11 @@ namespace game
 {
 	public abstract class Ability 
 	{
-		protected uint cooldown_ttl = 0;
+		protected float cooldown_ttl = 0;
 		public Character inflictor = null;
 		public EnumAbilitesKeys key;
 		public string anim_state;
-		public uint cooldown = 0;
+		public float cooldown = 0;
 		public float delay;
 		public bool is_animlock;
 		public bool is_available
@@ -23,8 +23,8 @@ namespace game
 
 		protected virtual void Use()
 		{
-			inflictor.PlayAnim(anim_state, is_animlock, delay);
 			inflictor.active_ability = this;
+			inflictor.PlayAnim(anim_state, is_animlock, delay);
 			SetCooldown();
 		}
 		public abstract bool CheckConditions();
@@ -35,12 +35,18 @@ namespace game
 		public void TickCooldown()
 		{
 			if(cooldown > 0)
-				cooldown--;
+				cooldown -= Time.deltaTime;
+			if(cooldown < 0)
+				cooldown = 0;
 		}
 
 		public bool TryUseAbility()
 		{
-			if(!is_available || inflictor == null)
+			if(!is_available)
+				return false;
+			if(inflictor == null)
+				return false;
+			if(!is_animlock && inflictor.active_ability == this)
 				return false;
 			Use();
 			return true;

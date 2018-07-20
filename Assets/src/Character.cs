@@ -17,6 +17,7 @@ namespace game
 		public HUD hud = null;
 		public List<Ability> abilites = null;
 		public Ability active_ability = null;
+		Coroutine aab_defer_routine = null;
 
 		void Start()
 		{
@@ -24,12 +25,12 @@ namespace game
 			mctl = GetComponent<MovementController>();
 			Init();
 			InitAbilites();
-			StartCoroutine(TickAbilites());
 		}
 
 		void Update()
 		{
 			ProcessInput();
+			TickAbilites();
 		}
 
 		void Init()
@@ -49,17 +50,12 @@ namespace game
 			}
 		}
 
-		IEnumerator TickAbilites()
+		void TickAbilites()
 		{
-			while(true)
+			for(int i = 0; i < abilites.Count; ++i)
 			{
-				yield return new WaitForSecondsRealtime(1.0f);
-				for(int i = 0; i < abilites.Count; ++i)
-				{
-					var ab = abilites[i];
-					ab.TickCooldown();
-				}
-				//TODO:
+				var ab = abilites[i];
+				ab.TickCooldown();
 			}
 		}
 
@@ -125,16 +121,27 @@ namespace game
 			if(is_animlock)
 				animator.SetBool(statename, true);
 			else
+			{
+				if(aab_defer_routine != null)
+				{
+					StopCoroutine(aab_defer_routine);
+					aab_defer_routine = null;
+				}
 				animator.Play(statename, 0);
+			}
 			
-			StartCoroutine(AnimDefer(delay));
+			aab_defer_routine = StartCoroutine(AnimDefer(delay));
 		}
 
 		IEnumerator AnimDefer(float delay = 0.0f)
 		{
 			yield return new WaitForSecondsRealtime(delay);
-			active_ability.Defer();
-			active_ability = null;
+			if(active_ability != null)
+			{
+				active_ability.Defer();
+				active_ability = null;
+			}
+			aab_defer_routine = null;
 		}
 
 		void OnSpawned()
