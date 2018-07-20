@@ -6,6 +6,7 @@ namespace game
 {
 	public abstract class Ability 
 	{
+		protected uint cooldown_ttl = 0;
 		public Character inflictor = null;
 		public EnumAbilitesKeys key;
 		public string anim_state;
@@ -22,12 +23,14 @@ namespace game
 
 		protected virtual void Use()
 		{
-			cooldown = 3;
-			inflictor.active_ability = this;
 			inflictor.PlayAnim(anim_state, is_animlock, delay);
+			inflictor.active_ability = this;
+			SetCooldown();
 		}
 		public abstract bool CheckConditions();
 		public virtual void Defer() { }
+
+		public void SetCooldown() { cooldown = cooldown_ttl; }
 
 		public void TickCooldown()
 		{

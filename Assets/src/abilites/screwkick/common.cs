@@ -4,6 +4,7 @@ namespace game
 	{
 		public Screwkick()
 		{
+			cooldown_ttl = 12;
 			key = EnumAbilitesKeys.KEY_2;
 			anim_state = "ScrewK";
 			delay = 1.2f;

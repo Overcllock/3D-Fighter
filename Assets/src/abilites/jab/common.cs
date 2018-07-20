@@ -4,6 +4,7 @@ namespace game
 	{
 		public Jab()
 		{
+			cooldown_ttl = 1;
 			key = EnumAbilitesKeys.KEY_LMB_1;
 			anim_state = "Jab";
 			delay = 0.4f;

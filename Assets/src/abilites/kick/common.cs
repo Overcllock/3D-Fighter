@@ -4,6 +4,7 @@ namespace game
 	{
 		public Kick()
 		{
+			cooldown_ttl = 1;
 			key = EnumAbilitesKeys.KEY_LMB_2;
 			anim_state = "Hikick";
 			delay = 0.4f;

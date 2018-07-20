@@ -4,6 +4,7 @@ namespace game
 	{
 		public Dodge()
 		{
+			cooldown_ttl = 6;
 			key = EnumAbilitesKeys.KEY_1;
 			anim_state = "Land";
 			delay = 0.5f;
