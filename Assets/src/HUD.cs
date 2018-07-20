@@ -15,6 +15,11 @@ namespace game
 
 		void Update() 
 		{
+			UpdateAbilites();
+		}
+
+		void UpdateAbilites()
+		{
 			
 		}
 	}

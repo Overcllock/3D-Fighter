@@ -11,14 +11,15 @@ namespace game
 		public EnumAbilitesKeys key;
 		public string anim_state;
 		public float cooldown = 0;
+		public float cooldown_percent
+		{
+			get { return cooldown_ttl > 0 ? 1 - cooldown / cooldown_ttl : 0; }
+		}
 		public float delay;
 		public bool is_animlock;
 		public bool is_available
 		{
-			get
-			{
-				return cooldown == 0 && CheckConditions();
-			}
+			get { return cooldown == 0 && CheckConditions(); }
 		}
 
 		protected virtual void Use()
