@@ -7,7 +7,7 @@ namespace game
 			cooldown_ttl = 3;
 			key = EnumAbilitesKeys.KEY_RMB;
 			anim_state = "Spinkick";
-			delay = 0.5f;
+			delay = 0.85f;
 			is_animlock = true;
 		}
 

@@ -7,8 +7,8 @@ namespace game
 			cooldown_ttl = 0;
 			key = EnumAbilitesKeys.KEY_LMB_2;
 			anim_state = "Hikick";
-			delay = 0.4f;
-			before_delay = 0.15f;
+			delay = 0.6f;
+			before_delay = 0.25f;
 			is_animlock = false;
 		}
 

@@ -7,7 +7,7 @@ namespace game
 {
 	public class Character : MonoBehaviour
 	{
-		const float SKILLS_STORING_INTERVAL = 0.75f;
+		const float SKILLS_STORING_INTERVAL = 0.8f;
 		
 		float queue_duration = 0;
 		public bool is_moving = false;
@@ -80,19 +80,25 @@ namespace game
 		void UpdateSkillsQueue()
 		{
 			if(skills_queue.Count == 0)
+			{
+				if(queue_duration > 0)
+					queue_duration = 0;
 				return;
+			}
 
 			queue_duration += Time.deltaTime;
 			if(queue_duration >= SKILLS_STORING_INTERVAL)
 			{
 				skills_queue.Dequeue();
 				queue_duration = 0;
-				return;
+				if(skills_queue.Count == 0)
+					return;
 			}
 
 			var skill = skills_queue.Dequeue();
 			if(!skill.TryUseAbility())
-				skills_queue.Enqueue(skill);
+				if(!skills_queue.Contains(skill))
+					skills_queue.Enqueue(skill);
 		}
 
 		void ProcessInput()
@@ -105,11 +111,14 @@ namespace game
 				if(is_held)
 				{
 					var ab = abilites.FindByKey(key);
-					if(ab != null && !is_use_ability)
+					if(ab != null)
 					{
 						ab.inflictor = this;
 						if(!ab.TryUseAbility())
-							skills_queue.Enqueue(ab);
+						{
+							if(!skills_queue.Contains(ab))
+								skills_queue.Enqueue(ab);
+						}
 					}
 				}
 				if(hud != null)
@@ -131,7 +140,10 @@ namespace game
 					{
 						ab.inflictor = this;
 						if(!ab.TryUseAbility())
-							skills_queue.Enqueue(ab);
+						{
+							if(!skills_queue.Contains(ab))
+								skills_queue.Enqueue(ab);
+						}
 					}
 				}
 				if(hud != null)

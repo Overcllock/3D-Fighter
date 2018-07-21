@@ -22,7 +22,7 @@ namespace game
 		{
 			get 
 			{ 
-				if(inflictor != null && is_animlock && inflictor.active_ability != null)
+				if(inflictor != null && is_animlock && inflictor.is_use_ability)
 					return false;
 				return cooldown == 0 && CheckConditions(); 
 			}
@@ -34,10 +34,10 @@ namespace game
 			inflictor.PlayAnim(anim_state, is_animlock, delay);
 			SetCooldown();
 		}
+
 		public abstract bool CheckConditions();
 		public virtual void Defer() { }
 		public virtual void Tick(float dt) { }
-
 		public void SetCooldown() { cooldown = cooldown_ttl; }
 
 		public void TickCooldown()
