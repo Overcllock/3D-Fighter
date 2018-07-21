@@ -8,15 +8,15 @@ namespace game
 	{
 		protected float cooldown_ttl = 0;
 		public Character inflictor = null;
-		public EnumAbilitesKeys key;
-		public string anim_state;
+		public EnumAbilitesKeys key = EnumAbilitesKeys.NONE;
+		public string anim_state = "Idle";
 		public float cooldown = 0;
 		public float cooldown_percent
 		{
 			get { return cooldown_ttl > 0 ? 1 - cooldown / cooldown_ttl : 0; }
 		}
 		public float delay;
-		public bool is_animlock;
+		public bool is_animlock = true;
 		public bool is_available
 		{
 			get { return cooldown == 0 && CheckConditions(); }

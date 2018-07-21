@@ -5,6 +5,7 @@ namespace game
 		public Counter()
 		{
 			cooldown_ttl = 0;
+			key = EnumAbilitesKeys.NONE;
 		}
 
 		protected override void Use()

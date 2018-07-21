@@ -5,6 +5,7 @@ namespace game
 		public Escape()
 		{
 			cooldown_ttl = 24;
+			key = EnumAbilitesKeys.KEY_TAB;
 		}
 
 		protected override void Use()

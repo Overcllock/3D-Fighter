@@ -41,7 +41,7 @@ namespace game
 		void InitAbilites()
 		{
 			abilites = new List<Ability>();
-			for(int i = 0; i < Main.self.all_keys.Length; ++i)
+			for(int i = 0; i < Main.self.all_abilites_keys.Length; ++i)
 			{
 				var key = Main.self.all_abilites_keys[i];
 				var ability = Ability.GetByKey(key);
@@ -56,6 +56,8 @@ namespace game
 			{
 				var ab = abilites[i];
 				ab.TickCooldown();
+				if(hud != null)
+					hud.UpdateCooldown(ab.key, ab.cooldown_percent);
 			}
 		}
 
@@ -65,7 +67,8 @@ namespace game
 			for(int i = 0; i < Main.self.all_keys.Length; ++i)
 			{
 				var key = Main.self.all_keys[i];
-				if(Input.GetKey(key))
+				bool is_held = Input.GetKey(key);
+				if(is_held)
 				{
 					var ab = abilites.FindByKey(key);
 					if(ab != null && !is_use_ability)
@@ -74,26 +77,32 @@ namespace game
 						ab.TryUseAbility();
 					}
 				}
+				if(hud != null)
+					hud.PushSkill((EnumAbilitesKeys)key, is_held);
 			}
 
 			//Mouse
 			for(int i = (int)EnumAbilitesKeys.KEY_LMB_1; i <= (int)EnumAbilitesKeys.KEY_RMB; ++i)
 			{
-				if(Input.GetMouseButtonDown(i))
+				bool is_held = Input.GetMouseButton(i);
+				bool is_pressed = Input.GetMouseButtonDown(i);
+				Ability ab = null;
+				if(is_pressed)
 				{
-					var ab = abilites.FindByKey((EnumAbilitesKeys)i);
+					ab = abilites.FindByKey((EnumAbilitesKeys)i);
 					if(ab != null && !is_use_ability)
 					{
 						if(i == (int)EnumAbilitesKeys.KEY_LMB_1 && active_ability == ab)
-						{
 							ab = abilites.FindByKey(EnumAbilitesKeys.KEY_LMB_2);
-							if(ab == null)
-								return;
+						if(ab != null)
+						{
+							ab.inflictor = this;
+							ab.TryUseAbility();
 						}
-						ab.inflictor = this;
-						ab.TryUseAbility();
 					}
 				}
+				if(hud != null)
+					hud.PushSkill((EnumAbilitesKeys)i, is_held);
 			}
 		}
 

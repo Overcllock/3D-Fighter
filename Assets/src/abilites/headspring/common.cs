@@ -5,6 +5,7 @@ namespace game
 		public Headspring()
 		{
 			cooldown_ttl = 12;
+			key = EnumAbilitesKeys.KEY_F;
 		}
 
 		protected override void Use()

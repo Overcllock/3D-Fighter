@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 114335366590405162}
   - component: {fileID: 95699849485374258}
   m_Layer: 5
-  m_Name: but_1
+  m_Name: but_Alpha1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1278,7 +1278,7 @@ GameObject:
   - component: {fileID: 114461279532160440}
   - component: {fileID: 95934089391537768}
   m_Layer: 5
-  m_Name: but_2
+  m_Name: but_Alpha2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2239,7 +2239,7 @@ Animator:
   m_GameObject: {fileID: 1670321232188572}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3d24d3d0ca2fa6e479cc00a301f9ca7a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7d132d0fbd6c24b698ca45a3645b9770, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2341,7 +2341,7 @@ Animator:
   m_GameObject: {fileID: 1368265572907978}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d132d0fbd6c24b698ca45a3645b9770, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

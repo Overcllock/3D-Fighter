@@ -5,6 +5,7 @@ namespace game
 		public RightEvade()
 		{
 			cooldown_ttl = 6;
+			key = EnumAbilitesKeys.KEY_E;
 		}
 
 		protected override void Use()

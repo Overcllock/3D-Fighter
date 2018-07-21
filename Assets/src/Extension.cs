@@ -92,4 +92,38 @@ namespace game
 			return offset;
 		}
 	}
+
+	public class SkillButtonList
+	{
+		public delegate GameObject ByKey(KeyCode key);
+		public delegate GameObject ByButton(int button);
+
+		ByKey get_by_key;
+		ByButton get_by_button;
+
+		public SkillButtonList(ByKey get_by_key = null, ByButton get_by_button = null)
+		{
+			this.get_by_key = get_by_key;
+			this.get_by_button = get_by_button;
+		}
+
+		public GameObject this[EnumAbilitesKeys key]
+		{
+			get
+			{
+				switch(key)
+				{
+					case EnumAbilitesKeys.NONE:
+						return null;
+					case EnumAbilitesKeys.KEY_LMB_1:
+					case EnumAbilitesKeys.KEY_LMB_2:
+						return get_by_button != null ? get_by_button(0) : null;
+					case EnumAbilitesKeys.KEY_RMB:
+						return get_by_button != null ? get_by_button(1) : null;
+					default:
+						return get_by_key != null ? get_by_key((KeyCode)key) : null;
+				}
+			}
+		}
+	}
 }

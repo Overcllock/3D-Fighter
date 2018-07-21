@@ -5,6 +5,7 @@ namespace game
 		public LeftEvade()
 		{
 			cooldown_ttl = 6;
+			key = EnumAbilitesKeys.KEY_Q;
 		}
 
 		protected override void Use()

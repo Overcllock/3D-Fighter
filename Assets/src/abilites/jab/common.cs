@@ -8,7 +8,7 @@ namespace game
 			key = EnumAbilitesKeys.KEY_LMB_1;
 			anim_state = "Jab";
 			delay = 0.3f;
-			is_animlock = false;
+			is_animlock = true;
 		}
 
 		protected override void Use()
