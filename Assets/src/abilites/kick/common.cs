@@ -7,14 +7,16 @@ namespace game
 			cooldown_ttl = 0;
 			key = EnumAbilitesKeys.KEY_LMB_2;
 			anim_state = "Hikick";
-			delay = 0.15f;
+			delay = 0.4f;
+			before_delay = 0.15f;
 			is_animlock = false;
 		}
 
 		protected override void Use()
 		{
 			//TODO:
-			base.Use();
+			if(inflictor != null)
+				inflictor.StartCoroutine(inflictor.WaitAndDo(base.Use, before_delay));
 		}
 
 		public override bool CheckConditions()

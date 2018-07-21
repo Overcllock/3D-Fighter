@@ -16,10 +16,16 @@ namespace game
 			get { return cooldown_ttl > 0 ? 1 - cooldown / cooldown_ttl : 0; }
 		}
 		public float delay;
+		public float before_delay;
 		public bool is_animlock = true;
 		public bool is_available
 		{
-			get { return cooldown == 0 && CheckConditions(); }
+			get 
+			{ 
+				if(inflictor != null && is_animlock && inflictor.active_ability != null)
+					return false;
+				return cooldown == 0 && CheckConditions(); 
+			}
 		}
 
 		protected virtual void Use()
@@ -30,6 +36,7 @@ namespace game
 		}
 		public abstract bool CheckConditions();
 		public virtual void Defer() { }
+		public virtual void Tick(float dt) { }
 
 		public void SetCooldown() { cooldown = cooldown_ttl; }
 

@@ -51,11 +51,6 @@ namespace game {
 
 			StartCoroutine(AutoSave());
 		}
-		
-		void Update () 
-		{
-			
-		}
 
 		public void ForceQuit()
 		{

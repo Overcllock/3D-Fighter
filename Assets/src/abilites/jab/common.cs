@@ -7,7 +7,7 @@ namespace game
 			cooldown_ttl = 1;
 			key = EnumAbilitesKeys.KEY_LMB_1;
 			anim_state = "Jab";
-			delay = 0.3f;
+			delay = 0.5f;
 			is_animlock = true;
 		}
 

@@ -1,14 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace game
 {
 	public class Character : MonoBehaviour
 	{
+		const float SKILLS_STORING_INTERVAL = 0.75f;
+		
+		float queue_duration = 0;
 		public bool is_moving = false;
 		public bool is_spawned = false;
-		public bool is_use_ability = false;
+		public bool is_use_ability
+		{
+			get { return active_ability != null; }
+		}
+
 		public EnumControl control = EnumControl.NONE;
 
 		vThirdPersonCamera cam;
@@ -17,7 +25,13 @@ namespace game
 		public HUD hud = null;
 		public List<Ability> abilites = null;
 		public Ability active_ability = null;
+		Queue<Ability> skills_queue = null;
 		Coroutine aab_defer_routine = null;
+
+		void Awake()
+		{
+			skills_queue = new Queue<Ability>();
+		}
 
 		void Start()
 		{
@@ -31,6 +45,7 @@ namespace game
 		{
 			ProcessInput();
 			TickAbilites();
+			UpdateSkillsQueue();
 		}
 
 		void Init()
@@ -56,9 +71,28 @@ namespace game
 			{
 				var ab = abilites[i];
 				ab.TickCooldown();
+				ab.Tick(Time.deltaTime);
 				if(hud != null)
 					hud.UpdateCooldown(ab.key, ab.cooldown_percent);
 			}
+		}
+
+		void UpdateSkillsQueue()
+		{
+			if(skills_queue.Count == 0)
+				return;
+
+			queue_duration += Time.deltaTime;
+			if(queue_duration >= SKILLS_STORING_INTERVAL)
+			{
+				skills_queue.Dequeue();
+				queue_duration = 0;
+				return;
+			}
+
+			var skill = skills_queue.Dequeue();
+			if(!skill.TryUseAbility())
+				skills_queue.Enqueue(skill);
 		}
 
 		void ProcessInput()
@@ -74,7 +108,8 @@ namespace game
 					if(ab != null && !is_use_ability)
 					{
 						ab.inflictor = this;
-						ab.TryUseAbility();
+						if(!ab.TryUseAbility())
+							skills_queue.Enqueue(ab);
 					}
 				}
 				if(hud != null)
@@ -90,20 +125,24 @@ namespace game
 				if(is_pressed)
 				{
 					ab = abilites.FindByKey((EnumAbilitesKeys)i);
-					if(ab != null && !is_use_ability)
+					if(i == (int)EnumAbilitesKeys.KEY_LMB_1 && active_ability == ab)
+						ab = abilites.FindByKey(EnumAbilitesKeys.KEY_LMB_2);
+					if(ab != null)
 					{
-						if(i == (int)EnumAbilitesKeys.KEY_LMB_1 && active_ability == ab)
-							ab = abilites.FindByKey(EnumAbilitesKeys.KEY_LMB_2);
-						if(ab != null)
-						{
-							ab.inflictor = this;
-							ab.TryUseAbility();
-						}
+						ab.inflictor = this;
+						if(!ab.TryUseAbility())
+							skills_queue.Enqueue(ab);
 					}
 				}
 				if(hud != null)
 					hud.PushSkill((EnumAbilitesKeys)i, is_held);
 			}
+		}
+
+		public IEnumerator WaitAndDo(UnityAction func, float delay)
+		{
+			yield return new WaitForSecondsRealtime(delay);
+			func();
 		}
 
 		public IEnumerator MoveForward(float delay)
