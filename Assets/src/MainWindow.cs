@@ -31,6 +31,7 @@ namespace game
 			var defeat_info = GetUIComponent<Text>("defeat_txt");
 			var rate_info = GetUIComponent<Text>("rate_txt");
 			var league_info = GetUIComponent<Image>("rank");
+			var rank_info_anim = GetUIComponent<Image>("rank_anim");
 
 			rank_info.text = "Ранг: " + acc.rate;
 			victory_info.text = "Побед: " + acc.wins;
@@ -41,15 +42,19 @@ namespace game
 			{
 				case EnumLeague.SILVER:
 					league_info.sprite = Resources.Load<Sprite>("sprites/rank_silver");
+					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/rank_silver_anim");
 					break;
 				case EnumLeague.GOLD:
 					league_info.sprite = Resources.Load<Sprite>("sprites/button-rank_gold");
+					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/button-rank_gold-anim");
 					break;
 				case EnumLeague.PLATINUM:
 					league_info.sprite = Resources.Load<Sprite>("sprites/rank_platinum");
+					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/rank-platinum_anim");
 					break;
 				default:
 					league_info.sprite = Resources.Load<Sprite>("sprites/rank_bronze");
+					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/rank_bronze_anim");
 					break;
 			}
 		}
