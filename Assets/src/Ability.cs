@@ -16,10 +16,16 @@ namespace game
 			get { return cooldown_ttl > 0 ? 1 - cooldown / cooldown_ttl : 0; }
 		}
 		public float delay;
+		public float before_delay;
 		public bool is_animlock = true;
 		public bool is_available
 		{
-			get { return cooldown == 0 && CheckConditions(); }
+			get 
+			{ 
+				if(inflictor != null && is_animlock && inflictor.is_use_ability)
+					return false;
+				return cooldown == 0 && CheckConditions(); 
+			}
 		}
 
 		protected virtual void Use()
@@ -28,9 +34,10 @@ namespace game
 			inflictor.PlayAnim(anim_state, is_animlock, delay);
 			SetCooldown();
 		}
+
 		public abstract bool CheckConditions();
 		public virtual void Defer() { }
-
+		public virtual void Tick(float dt) { }
 		public void SetCooldown() { cooldown = cooldown_ttl; }
 
 		public void TickCooldown()

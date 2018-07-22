@@ -7,7 +7,7 @@ namespace game
 			cooldown_ttl = 6;
 			key = EnumAbilitesKeys.KEY_1;
 			anim_state = "Land";
-			delay = 0.5f;
+			delay = 0.75f;
 			is_animlock = true;
 		}
 

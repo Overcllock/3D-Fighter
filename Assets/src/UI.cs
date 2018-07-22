@@ -10,7 +10,7 @@ namespace game
 	{
 		public List<UIWindow> windows = null;
 
-		void Start() 
+		void Awake() 
 		{
 			windows = new List<UIWindow>();
 		}
@@ -22,6 +22,15 @@ namespace game
 			var window = ui_window_go.GetComponent<UIWindow>();
 			if(window != null)
 				windows.Add(window);
+		}
+
+		public void CloseAll()
+		{
+			for(int i = 0; i < windows.Count; ++i)
+			{
+				var window = windows[i];
+				window.Close();
+			}
 		}
 
 		public T Find<T>() where T : UIWindow
@@ -40,7 +49,7 @@ namespace game
 	{
 		protected UI root;
 
-		void Awake()
+		protected void Awake()
 		{
 			root = Main.self.ui_root;
 		}
@@ -50,6 +59,7 @@ namespace game
 			//TODO: close UI
 			if(root == null) return;
 			root.windows.Remove(this);
+			Destroy(gameObject);
 		}
 
 		protected void MakeButton(string path, UnityAction func)

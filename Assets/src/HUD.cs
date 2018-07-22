@@ -23,8 +23,9 @@ namespace game
 		SkillButtonList skill_list;
 		List<SkillButton> skill_buttons;
 
-		void Awake()
+		new protected void Awake()
 		{
+			base.Awake();
 			Main.self.player.hud = this;
 			skill_list = new SkillButtonList(GetSkillByKey, GetSkillByMouseButton);
 			skill_buttons = new List<SkillButton>();
