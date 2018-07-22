@@ -41,7 +41,7 @@ namespace game
 			InitAbilites();
 		}
 
-		void Update()
+		void FixedUpdate()
 		{
 			ProcessInput();
 			TickAbilites();
@@ -71,7 +71,7 @@ namespace game
 			{
 				var ab = abilites[i];
 				ab.TickCooldown();
-				ab.Tick(Time.deltaTime);
+				ab.Tick(Time.fixedDeltaTime);
 				if(hud != null)
 					hud.UpdateCooldown(ab.key, ab.cooldown_percent);
 			}
@@ -86,7 +86,7 @@ namespace game
 				return;
 			}
 
-			queue_duration += Time.deltaTime;
+			queue_duration += Time.fixedDeltaTime;
 			if(queue_duration >= SKILLS_STORING_INTERVAL)
 			{
 				skills_queue.Dequeue();
@@ -123,6 +123,12 @@ namespace game
 				}
 				if(hud != null)
 					hud.PushSkill((EnumAbilitesKeys)key, is_held);
+			}
+
+			if(Input.GetKeyDown(KeyCode.Escape))
+			{
+				Main.self.SetPause(!Main.self.is_paused);
+				cam.SetCursorVisibility(Main.self.is_paused);
 			}
 
 			//Mouse
@@ -176,6 +182,12 @@ namespace game
 			OnSpawned();
 		}
 
+		public void Release()
+		{
+			gameObject.SetActive(false);
+			OnRelease();
+		}
+
 		public void PlayAnim(string statename, bool is_animlock, float delay)
 		{
 			if(is_animlock)
@@ -206,12 +218,31 @@ namespace game
 
 		void OnSpawned()
 		{
-			Init();
+			if(cam == null)
+				Init();
+
 			is_spawned = true;
 			cam.SetMainTarget(transform);
 			cam.lockCamera = false;
 			cam.cutsceneMode = false;
-			GameObject.Find("bird").SetActive(false);
+			if(Main.self.bird != null)
+				Main.self.bird.SetActive(false);
+		}
+
+		void OnRelease()
+		{
+			if(cam == null)
+				Init();
+
+			is_spawned = false;
+			var bird = Main.self.bird;
+			if(bird != null)
+			{
+				bird.SetActive(true);
+				cam.SetMainTarget(bird.transform);
+				cam.lockCamera = true;
+				cam.cutsceneMode = true;
+			}
 		}
 	}
 }

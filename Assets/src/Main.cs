@@ -8,10 +8,17 @@ namespace game {
 		public Account account = null;
 		public UI ui_root;
 		public Character player;
+		[HideInInspector]
+		public GameObject bird;
+
+		[HideInInspector]
+		public bool is_paused = false;
 
 		const float autosave_interval = 60.0f;
-
+		
+		[HideInInspector]
 		public KeyCode[] all_keys;
+		[HideInInspector]
 		public EnumAbilitesKeys[] all_abilites_keys;
 
 		void Awake()
@@ -42,6 +49,7 @@ namespace game {
 
 		void Start () 
 		{
+			bird = GameObject.Find("bird");
 			account = Account.Load() ?? new Account();
 			
 			if(account.IsValid)
@@ -50,6 +58,21 @@ namespace game {
 				ui_root.Open("prefabs/SignUp");
 
 			StartCoroutine(AutoSave());
+		}
+
+		public void SetPause(bool is_paused)
+		{
+			Time.timeScale = is_paused ? 0 : 1;
+			this.is_paused = is_paused;
+
+			if(is_paused)
+				ui_root.Open("prefabs/Pause");
+			else
+			{
+				var pause_ui = ui_root.Find<PauseWindow>();
+				if(pause_ui != null)
+					pause_ui.Close();
+			}
 		}
 
 		public void ForceQuit()

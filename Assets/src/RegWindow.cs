@@ -32,7 +32,6 @@ namespace game
 			Account.Save(account);
 			Close();
 			root.Open("prefabs/MainMenu");
-			Destroy(gameObject);
 		}
 	}
 }

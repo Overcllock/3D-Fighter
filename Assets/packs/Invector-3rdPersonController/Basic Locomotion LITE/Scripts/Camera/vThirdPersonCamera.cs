@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Invector;
+using game;
 
 public class vThirdPersonCamera : MonoBehaviour
 {
@@ -112,9 +113,7 @@ public class vThirdPersonCamera : MonoBehaviour
     {
         if (target == null || targetLookAt == null) return;
 
-        hideCursor = cutsceneMode ? false : !Input.GetKey(KeyCode.LeftAlt);
-        Cursor.visible = !hideCursor;
-
+        SetCursorVisibility(cutsceneMode || Main.self.is_paused ? true : Input.GetKey(KeyCode.LeftAlt));
         CameraMovement();
 
         if(!lockCamera)
@@ -122,6 +121,12 @@ public class vThirdPersonCamera : MonoBehaviour
 
         if(cutsceneMode)
             AutoRotateCamera();
+    }
+
+    public void SetCursorVisibility(bool visibility)
+    {
+        hideCursor = !visibility;
+        Cursor.visible = visibility;
     }
 
 

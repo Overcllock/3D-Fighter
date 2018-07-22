@@ -14,16 +14,15 @@ namespace game
 			MakeButton("but_exit", Main.self.ForceQuit);
 		}
 
-		public void OnPlay()
+		void OnPlay()
 		{
 			//TODO:
 			Close();
-			Destroy(gameObject);
 			root.Open("prefabs/HUD");
 			Main.self.player.Spawn();
 		}
 
-		public void Fill()
+		void Fill()
 		{
 			var acc = Main.self.account;
 
