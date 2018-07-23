@@ -23,6 +23,9 @@ namespace game
 		SkillButtonList skill_list;
 		List<SkillButton> skill_buttons;
 
+		[HideInInspector]
+		public Image crosshair;
+
 		new protected void Awake()
 		{
 			base.Awake();
@@ -33,7 +36,17 @@ namespace game
 
 		void Start()
 		{
+			crosshair = gameObject.GetChild("crosshair").GetComponent<Image>();
+
+			Fill();
 			InitSkillButtons();
+		}
+
+		void Fill()
+		{
+			var pinfo = transform.FindRecursive("info_player");
+			var nick_txt = pinfo.FindRecursive("nick").GetComponent<Text>();
+			nick_txt.text = Main.self.account.name;
 		}
 
 		void InitSkillButtons()
@@ -45,6 +58,12 @@ namespace game
 				if(skill_go != null)
 					skill_buttons.Add(new SkillButton(skill_go, ab_key));
 			}
+		}
+
+		public void SetCrosshairAlpha(bool has_target)
+		{
+			if(crosshair != null)
+				crosshair.CrossFadeAlpha(has_target ? 1.0f : 0.2f, 0.5f, false);
 		}
 
 		public void PushSkill(EnumAbilitesKeys key, bool is_push)

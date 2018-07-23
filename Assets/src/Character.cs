@@ -10,18 +10,26 @@ namespace game
 		const float SKILLS_STORING_INTERVAL = 0.8f;
 		
 		float queue_duration = 0;
+		[HideInInspector]
 		public bool is_moving = false;
+		[HideInInspector]
 		public bool is_spawned = false;
+		public bool is_player = false;
 		public bool is_use_ability
 		{
 			get { return active_ability != null; }
 		}
 
+		[HideInInspector]
 		public EnumControl control = EnumControl.NONE;
 
 		vThirdPersonCamera cam;
 		Animator animator = null;
+		[HideInInspector]
+		public Character target = null;
+		[HideInInspector]
 		public MovementController mctl = null;
+		[HideInInspector]
 		public HUD hud = null;
 		public List<Ability> abilites = null;
 		public Ability active_ability = null;
@@ -43,9 +51,13 @@ namespace game
 
 		void FixedUpdate()
 		{
-			ProcessInput();
+			UpdateTarget();
 			TickAbilites();
-			UpdateSkillsQueue();
+			if(is_player)
+			{
+				ProcessInput();
+				UpdateSkillsQueue();
+			}
 		}
 
 		void Init()
@@ -75,6 +87,39 @@ namespace game
 				if(hud != null)
 					hud.UpdateCooldown(ab.key, ab.cooldown_percent);
 			}
+		}
+
+		void UpdateTarget()
+		{
+			bool is_target_find = false;
+			var ray = Camera.main.ViewportPointToRay(new Vector3(0.5F, 0.6F, 0));
+			var hits = Physics.RaycastAll(ray, 20.0f);
+
+			target = null;
+			for(int i = 0; i < hits.Length; ++i)
+			{
+				var hit = hits[i];
+				var target = hit.collider.gameObject.GetComponent<Character>();
+				if(target != null && target != this)
+				{
+					if(this.target != null)
+					{
+						var current_dist = Vector3.Distance(transform.position, this.target.transform.position);
+						var new_dist = Vector3.Distance(transform.position, target.transform.position);
+						if(new_dist < current_dist)
+						{
+							this.target = target;
+							continue;
+						}
+					}
+					this.target = target;
+				}
+			}
+
+			is_target_find = target != null;
+
+			if(hud != null)
+				hud.SetCrosshairAlpha(is_target_find);
 		}
 
 		void UpdateSkillsQueue()
@@ -135,9 +180,8 @@ namespace game
 			for(int i = (int)EnumAbilitesKeys.KEY_LMB_1; i <= (int)EnumAbilitesKeys.KEY_RMB; ++i)
 			{
 				bool is_held = Input.GetMouseButton(i);
-				bool is_pressed = Input.GetMouseButtonDown(i);
 				Ability ab = null;
-				if(is_pressed)
+				if(is_held)
 				{
 					ab = abilites.FindByKey((EnumAbilitesKeys)i);
 					if(i == (int)EnumAbilitesKeys.KEY_LMB_1 && active_ability == ab)
