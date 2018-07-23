@@ -16,7 +16,6 @@ namespace game
 			//TODO:
 			base.Use();
 			inflictor.mctl.moving_allowed = false;
-			inflictor.StartCoroutine(inflictor.MoveForward(delay));
 		}
 
 		public override bool CheckConditions()

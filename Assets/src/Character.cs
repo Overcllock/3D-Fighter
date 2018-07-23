@@ -19,6 +19,19 @@ namespace game
 		{
 			get { return active_ability != null; }
 		}
+		public bool has_target
+		{
+			get { return target != null; }
+		}	
+		public float distance_to_target
+		{
+			get 
+			{ 
+				if(!has_target)
+					return Mathf.Infinity;
+				return Vector3.Distance(transform.position, target.transform.position); 
+			}
+		}
 
 		[HideInInspector]
 		public EnumControl control = EnumControl.NONE;
@@ -155,7 +168,7 @@ namespace game
 				bool is_held = Input.GetKey(key);
 				if(is_held)
 				{
-					var ab = abilites.FindByKey(key);
+					var ab = abilites.FindByKey((EnumAbilitesKeys)key);
 					if(ab != null)
 					{
 						ab.inflictor = this;
@@ -207,16 +220,16 @@ namespace game
 			func();
 		}
 
-		public IEnumerator MoveForward(float delay)
+		public IEnumerator Evade(Vector3 point, Vector3 axis, float delay)
 		{
-			float dt = 0;
-			while(dt < delay)
+			float ttl = 0;
+			do
 			{
-				mctl.MoveForward(6.0f);
-				dt += Time.deltaTime;
+				transform.RotateAround(point, axis, Time.fixedDeltaTime * 180.0f * 3.1f);
+				ttl += Time.fixedDeltaTime;
 				yield return new WaitForFixedUpdate();
 			}
-			mctl.moving_allowed = true;
+			while(ttl <= delay);
 		}
 
 		public void Spawn()

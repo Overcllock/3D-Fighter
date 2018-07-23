@@ -183,10 +183,10 @@ public class vThirdPersonCamera : MonoBehaviour
         }
     }
 
-    public void AutoRotateCamera()
+    public void AutoRotateCamera(bool x = true, bool y = true)
     {
-        mouseY = currentTarget.root.localEulerAngles.x;
-        mouseX = currentTarget.root.localEulerAngles.y;
+        if(y) mouseY = currentTarget.root.localEulerAngles.x;
+        if(x) mouseX = currentTarget.root.localEulerAngles.y;
     }
 
     public void ZoomCamera(float delta)

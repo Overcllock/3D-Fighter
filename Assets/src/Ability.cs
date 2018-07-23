@@ -10,6 +10,7 @@ namespace game
 		public Character inflictor = null;
 		public EnumAbilitesKeys key = EnumAbilitesKeys.NONE;
 		public string anim_state = "Idle";
+		public float radius = 0;
 		public float cooldown = 0;
 		public float cooldown_percent
 		{

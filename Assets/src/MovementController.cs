@@ -23,13 +23,14 @@ namespace game
 		public float speed = 5.0f;
 		public float speed_smooth_time = 0.1f;
 		public float strafe_rotation_speed = 10f;
-		public bool moving_allowed = true;
+		public bool moving_allowed;
+		public bool keep_camera_look_at;
 
 		float current_speed;
 		float speed_smooth_velocity;
 
 		void Start() 
-		{	
+		{	keep_camera_look_at = false;
 			last_input = new Stack<KeyCode>(ALL_KEYS.Length);
 			cctl = gameObject.GetComponent<CharacterController>();
 			animator = gameObject.GetComponent<Animator>();
@@ -51,8 +52,7 @@ namespace game
 		
 		void FixedUpdate() 
 		{
-			if(moving_allowed)
-				Move();
+			Move();
 
 			Main.self.player.is_moving = cctl.velocity.magnitude > 0.6f;
 			animator.SetBool("Run", Main.self.player.is_moving && Main.self.player.active_ability == null);
@@ -62,19 +62,37 @@ namespace game
 		{
 			var input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 			var mouse_input = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+			if(moving_allowed)
+				MoveCharacter(input);
+
+			MoveCamera(mouse_input, keep_camera_look_at);
+		}
+
+		void MoveCharacter(Vector2 input)
+		{
 			var input_directory = input.normalized;
-			var directory = GetDirectory();
-				
+
 			float target_speed = speed * input_directory.magnitude;
 			current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref speed_smooth_velocity, speed_smooth_time);
 
 			var velocity = Vector3.ClampMagnitude(transform.forward * current_speed, target_speed);
 			cctl.Move(velocity * Time.fixedDeltaTime);
 
-			cam.RotateCamera(mouse_input.x, mouse_input.y);
-			RotateWithAnotherTransform(cam.transform, directory.ToOffset(transform));
-
 			current_speed = new Vector2(cctl.velocity.x, cctl.velocity.z).magnitude;
+		}
+
+		void MoveCamera(Vector2 mouse_input, bool follow_character_transform = false)
+		{
+			var directory = GetDirectory();
+
+			if(follow_character_transform)
+				cam.AutoRotateCamera(x: true, y: false);
+			else
+				cam.RotateCamera(mouse_input.x, mouse_input.y);
+
+			if(moving_allowed)
+				RotateWithAnotherTransform(cam.transform, directory.ToOffset(transform));
 		}
 
 		void RotateWithAnotherTransform(Transform referenceTransform, float angleOffset = 0.0f)

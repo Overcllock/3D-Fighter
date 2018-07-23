@@ -17,17 +17,6 @@ namespace game
 			return null;
 		}
 
-		public static Ability FindByKey(this List<Ability> abs, KeyCode key)
-		{
-			for(int i = 0; i < abs.Count; ++i)
-			{
-				var ab = abs[i];
-				if((KeyCode)ab.key == key)
-					return ab;
-			}
-			return null;
-		}
-
 		public static GameObject GetChild(this GameObject o, string name)
 		{
 			Transform t = o.transform.Find(name);
@@ -41,20 +30,8 @@ namespace game
 			return GameObject.Instantiate(prefab, o.transform) as GameObject;
 		}
 
-		public static Transform FindRecursive(this Transform current, string name, bool depth_first = true)   
+		public static Transform FindRecursive(this Transform current, string name)   
 		{
-			if(!depth_first)
-			{
-				if(current.parent)
-				{
-					if(current.parent.Find(name) == current)
-						return current;
-				}
-				//NOTE: switching to mem-allocating version only if there's no parent
-				else if(current.name == name)
-					return current;
-			}
-
 			for(int i = 0; i < current.childCount; ++i)
 			{
 				var chld = current.GetChild(i); 
@@ -62,18 +39,14 @@ namespace game
 				if(tmp != null)
 					return tmp;
 			}
-
-			if(depth_first)
+			
+			if(current.parent)
 			{
-				if(current.parent)
-				{
-					if(current.parent.Find(name) == current)
-						return current;
-				}
-				//NOTE: switching to mem-allocating version only if there's no parent
-				else if(current.name == name)
+				if(current.parent.Find(name) == current)
 					return current;
 			}
+			else if(current.name == name)
+				return current;
 
 			return null;
 		}
