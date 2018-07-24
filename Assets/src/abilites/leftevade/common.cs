@@ -23,6 +23,13 @@ namespace game
 			inflictor.StartCoroutine(inflictor.Evade(inflictor.target.transform.position, Vector3.up, delay / 2));
 		}
 
+		public override void Tick(float dt)
+		{
+			base.Tick(dt);
+			if(inflictor.hud != null)
+				inflictor.hud.UpdateSkillButtonAlpha(key, CheckConditions());
+		}
+
 		public override bool CheckConditions()
 		{
 			return inflictor.has_target && inflictor.distance_to_target <= radius;

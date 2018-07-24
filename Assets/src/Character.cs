@@ -90,7 +90,10 @@ namespace game
 				var key = Main.self.all_abilites_keys[i];
 				var ability = Ability.GetByKey(key);
 				if(ability != null)
+				{
+					ability.inflictor = this;
 					abilites.Add(ability);
+				}
 			}
 		}
 
@@ -171,14 +174,10 @@ namespace game
 				if(is_held)
 				{
 					var ab = abilites.FindByKey((EnumAbilitesKeys)key);
-					if(ab != null)
+					if(ab != null && !ab.TryUseAbility())
 					{
-						ab.inflictor = this;
-						if(!ab.TryUseAbility())
-						{
-							if(!skills_queue.Contains(ab))
-								skills_queue.Enqueue(ab);
-						}
+						if(!skills_queue.Contains(ab))
+							skills_queue.Enqueue(ab);
 					}
 				}
 				if(hud != null)
@@ -201,14 +200,10 @@ namespace game
 					ab = abilites.FindByKey((EnumAbilitesKeys)i);
 					if(i == (int)EnumAbilitesKeys.KEY_LMB_1 && active_ability == ab)
 						ab = abilites.FindByKey(EnumAbilitesKeys.KEY_LMB_2);
-					if(ab != null)
+					if(ab != null && !ab.TryUseAbility())
 					{
-						ab.inflictor = this;
-						if(!ab.TryUseAbility())
-						{
-							if(!skills_queue.Contains(ab))
-								skills_queue.Enqueue(ab);
-						}
+						if(!skills_queue.Contains(ab))
+							skills_queue.Enqueue(ab);
 					}
 				}
 				if(hud != null)

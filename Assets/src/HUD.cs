@@ -85,6 +85,20 @@ namespace game
 			}
 		}
 
+		public void UpdateSkillButtonAlpha(EnumAbilitesKeys key, bool is_available)
+		{
+			var skill = GetSkillFromList(key);
+			if(skill == null)
+				return;
+
+			var cooldown = skill.GetChild("cooldown");
+			if(cooldown != null)
+			{
+				var img = cooldown.GetComponent<Image>();
+				img.CrossFadeAlpha(is_available ? 1 : 0, 0.1f, false);
+			}
+		}
+
 		public void UpdateCooldown(EnumAbilitesKeys key, float percent)
 		{
 			if(key == EnumAbilitesKeys.KEY_LMB_2)
