@@ -8,6 +8,8 @@ namespace game
 	[RequireComponent(typeof(Animator))]
 	public class MovementController : MonoBehaviour 
 	{
+		const float MIN_VELOCITY_MAGNITUDE = 0.6f;
+
 		KeyCode[] ALL_KEYS = new KeyCode[] {
 			KeyCode.W,
 			KeyCode.A,
@@ -54,7 +56,7 @@ namespace game
 		{
 			Move();
 
-			Main.self.player.is_moving = cctl.velocity.magnitude > 0.6f;
+			Main.self.player.is_moving = cctl.velocity.magnitude > MIN_VELOCITY_MAGNITUDE;
 			animator.SetBool("Run", Main.self.player.is_moving && Main.self.player.active_ability == null);
 		}
 
@@ -65,7 +67,6 @@ namespace game
 
 			if(moving_allowed)
 				MoveCharacter(input);
-
 			MoveCamera(mouse_input, keep_camera_look_at);
 		}
 
@@ -100,12 +101,6 @@ namespace game
             var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), strafe_rotation_speed * Time.fixedDeltaTime);
         }
-
-		public void MoveForward(float speed)
-		{
-			var velocity = transform.forward * speed;
-			cctl.Move(velocity * Time.deltaTime);
-		}
 
 		Vector3 GetDirectory()
 		{

@@ -1,21 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace game {
 	public class Main : MonoBehaviour {
+		const float AUTOSAVE_INTERVAL = 60.0f;
+
 		public static Main self = null;
+
 		public Account account = null;
 		public UI ui_root;
 		public Character player;
+
 		[HideInInspector]
 		public GameObject bird;
-
 		[HideInInspector]
 		public bool is_paused = false;
 
-		const float autosave_interval = 60.0f;
-		
 		[HideInInspector]
 		public KeyCode[] all_keys;
 		[HideInInspector]
@@ -50,8 +52,8 @@ namespace game {
 		void Start () 
 		{
 			bird = GameObject.Find("bird");
+
 			account = Account.Load() ?? new Account();
-			
 			if(account.IsValid)
 				ui_root.Open("prefabs/MainMenu");
 			else
@@ -86,13 +88,19 @@ namespace game {
 				Account.Save(account);
 		}
 
+		public static IEnumerator WaitAndDo(UnityAction func, float delay)
+		{
+			yield return new WaitForSecondsRealtime(delay);
+			func();
+		}
+
 		IEnumerator AutoSave(bool repeat = true)
 		{
 			do
 			{
 				if(account != null && account.IsValid)
 					Account.Save(account);
-				yield return new WaitForSecondsRealtime(autosave_interval);
+				yield return new WaitForSecondsRealtime(AUTOSAVE_INTERVAL);
 			}
 			while(repeat);
 		}

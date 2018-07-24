@@ -10,11 +10,13 @@ namespace game
 		const float SKILLS_STORING_INTERVAL = 0.8f;
 		
 		float queue_duration = 0;
+
 		[HideInInspector]
 		public bool is_moving = false;
 		[HideInInspector]
 		public bool is_spawned = false;
 		public bool is_player = false;
+
 		public bool is_use_ability
 		{
 			get { return active_ability != null; }
@@ -33,21 +35,22 @@ namespace game
 			}
 		}
 
-		[HideInInspector]
-		public EnumControl control = EnumControl.NONE;
-
 		vThirdPersonCamera cam;
 		Animator animator = null;
+		Coroutine aab_defer_routine = null;
+
+		[HideInInspector]
+		public EnumControl control = EnumControl.NONE;
 		[HideInInspector]
 		public Character target = null;
 		[HideInInspector]
 		public MovementController mctl = null;
 		[HideInInspector]
 		public HUD hud = null;
+
 		public List<Ability> abilites = null;
 		public Ability active_ability = null;
 		Queue<Ability> skills_queue = null;
-		Coroutine aab_defer_routine = null;
 
 		void Awake()
 		{
@@ -58,7 +61,7 @@ namespace game
 		{
 			animator = GetComponent<Animator>();
 			mctl = GetComponent<MovementController>();
-			Init();
+			InitCamera();
 			InitAbilites();
 		}
 
@@ -66,6 +69,7 @@ namespace game
 		{
 			UpdateTarget();
 			TickAbilites();
+
 			if(is_player)
 			{
 				ProcessInput();
@@ -73,7 +77,7 @@ namespace game
 			}
 		}
 
-		void Init()
+		void InitCamera()
 		{
 			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
 		}
@@ -95,7 +99,6 @@ namespace game
 			for(int i = 0; i < abilites.Count; ++i)
 			{
 				var ab = abilites[i];
-				ab.TickCooldown();
 				ab.Tick(Time.fixedDeltaTime);
 				if(hud != null)
 					hud.UpdateCooldown(ab.key, ab.cooldown_percent);
@@ -139,8 +142,7 @@ namespace game
 		{
 			if(skills_queue.Count == 0)
 			{
-				if(queue_duration > 0)
-					queue_duration = 0;
+				queue_duration = 0;
 				return;
 			}
 
@@ -214,12 +216,6 @@ namespace game
 			}
 		}
 
-		public IEnumerator WaitAndDo(UnityAction func, float delay)
-		{
-			yield return new WaitForSecondsRealtime(delay);
-			func();
-		}
-
 		public IEnumerator Evade(Vector3 point, Vector3 axis, float delay)
 		{
 			float ttl = 0;
@@ -270,18 +266,21 @@ namespace game
 				active_ability.Defer();
 				active_ability = null;
 			}
+			
 			aab_defer_routine = null;
 		}
 
 		void OnSpawned()
 		{
 			if(cam == null)
-				Init();
+				InitCamera();
 
 			is_spawned = true;
+
 			cam.SetMainTarget(transform);
 			cam.lockCamera = false;
 			cam.cutsceneMode = false;
+
 			if(Main.self.bird != null)
 				Main.self.bird.SetActive(false);
 		}
@@ -289,9 +288,10 @@ namespace game
 		void OnRelease()
 		{
 			if(cam == null)
-				Init();
+				InitCamera();
 
 			is_spawned = false;
+
 			var bird = Main.self.bird;
 			if(bird != null)
 			{

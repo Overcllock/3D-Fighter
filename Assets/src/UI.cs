@@ -56,8 +56,9 @@ namespace game
 
 		public void Close()
 		{
-			//TODO: close UI
-			if(root == null) return;
+			if(root == null) 
+				return;
+				
 			root.windows.Remove(this);
 			Destroy(gameObject);
 		}

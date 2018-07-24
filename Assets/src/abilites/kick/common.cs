@@ -16,7 +16,7 @@ namespace game
 		{
 			//TODO:
 			if(inflictor != null)
-				inflictor.StartCoroutine(inflictor.WaitAndDo(base.Use, before_delay));
+				inflictor.StartCoroutine(Main.WaitAndDo(base.Use, before_delay));
 		}
 
 		public override bool CheckConditions()

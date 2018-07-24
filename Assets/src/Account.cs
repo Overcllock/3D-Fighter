@@ -14,9 +14,20 @@ namespace game {
 		public static readonly uint GOLD_RATE = 1600;
 		public static readonly uint PLATINUM_RATE = 1900;
 
-
 		public string name;
 		public uint rate;
+		public uint wins;
+		public uint loses;
+		
+		[JsonIgnore]
+		public uint winrate 
+		{
+			get
+			{
+				float rate = wins > 0 ? (float)wins / (float)(wins + loses) : 0;
+				return (uint)Mathf.RoundToInt(rate * 100);
+			}
+		}
 		[JsonIgnore]
 		public EnumLeague league
 		{
@@ -26,17 +37,6 @@ namespace game {
 				if(rate < GOLD_RATE) return EnumLeague.SILVER;
 				if(rate < PLATINUM_RATE) return EnumLeague.GOLD;
 				else return EnumLeague.PLATINUM;
-			}
-		}
-		public uint wins;
-		public uint loses;
-		[JsonIgnore]
-		public uint winrate 
-		{
-			get
-			{
-				float rate = wins > 0 ? (float)wins / (float)(wins + loses) : 0;
-				return (uint)Mathf.RoundToInt(rate * 100);
 			}
 		}
 		[JsonIgnore]

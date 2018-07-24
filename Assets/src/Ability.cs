@@ -6,19 +6,20 @@ namespace game
 {
 	public abstract class Ability 
 	{
-		protected float cooldown_ttl = 0;
 		public Character inflictor = null;
 		public EnumAbilitesKeys key = EnumAbilitesKeys.NONE;
 		public string anim_state = "Idle";
 		public float radius = 0;
 		public float cooldown = 0;
+		protected float cooldown_ttl = 0;
+		public float delay;
+		public float before_delay;
+		public bool is_animlock = true;
+
 		public float cooldown_percent
 		{
 			get { return cooldown_ttl > 0 ? 1 - cooldown / cooldown_ttl : 0; }
 		}
-		public float delay;
-		public float before_delay;
-		public bool is_animlock = true;
 		public bool is_available
 		{
 			get 
@@ -29,6 +30,10 @@ namespace game
 			}
 		}
 
+		public abstract bool CheckConditions();
+		public virtual void Defer() { }
+		public void SetCooldown() { cooldown = cooldown_ttl; }
+
 		protected virtual void Use()
 		{
 			inflictor.active_ability = this;
@@ -36,17 +41,14 @@ namespace game
 			SetCooldown();
 		}
 
-		public abstract bool CheckConditions();
-		public virtual void Defer() { }
-		public virtual void Tick(float dt) { }
-		public void SetCooldown() { cooldown = cooldown_ttl; }
+		public virtual void Tick(float dt) 
+		{ 
+			TickCooldown();
+		}
 
-		public void TickCooldown()
+		void TickCooldown()
 		{
-			if(cooldown > 0)
-				cooldown -= Time.deltaTime;
-			if(cooldown < 0)
-				cooldown = 0;
+			cooldown = Mathf.Clamp(cooldown -= Time.fixedDeltaTime, 0, Mathf.Infinity);
 		}
 
 		public bool TryUseAbility()
@@ -57,6 +59,7 @@ namespace game
 				return false;
 			if(!is_animlock && inflictor.active_ability == this)
 				return false;
+
 			Use();
 			return true;
 		}

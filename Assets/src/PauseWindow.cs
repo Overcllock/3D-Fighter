@@ -7,6 +7,7 @@ namespace game
 	public class PauseWindow : UIWindow 
 	{
 		const float LOADING_DELAY = 0.7f;
+		
 		bool window_loaded = false;
 
 		void Start()

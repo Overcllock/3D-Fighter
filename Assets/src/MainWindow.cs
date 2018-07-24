@@ -16,7 +16,6 @@ namespace game
 
 		void OnPlay()
 		{
-			//TODO:
 			Close();
 			root.Open("prefabs/HUD");
 			Main.self.player.Spawn();
@@ -38,6 +37,7 @@ namespace game
 			defeat_info.text = "Поражений: " + acc.loses;
 			rate_info.text = "Рейтинг побед: " + acc.winrate + '%';
 
+			//TODO: move to config
 			switch(acc.league)
 			{
 				case EnumLeague.SILVER:

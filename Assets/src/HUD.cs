@@ -29,9 +29,9 @@ namespace game
 		new protected void Awake()
 		{
 			base.Awake();
-			Main.self.player.hud = this;
 			skill_list = new SkillButtonList(GetSkillByKey, GetSkillByMouseButton);
 			skill_buttons = new List<SkillButton>();
+			Main.self.player.hud = this;
 		}
 
 		void Start()
