@@ -138,7 +138,13 @@ namespace game
 			is_target_find = target != null;
 
 			if(hud != null)
+			{
 				hud.SetCrosshairAlpha(is_target_find);
+				hud.SetEnemyBarVisibility(is_target_find);
+
+				if(is_target_find)
+					hud.UpdateEnemyBar(target);
+			}
 		}
 
 		void UpdateSkillsQueue()

@@ -66,6 +66,16 @@ namespace game
 				crosshair.CrossFadeAlpha(has_target ? 1.0f : 0.2f, 0.5f, false);
 		}
 
+		public void SetEnemyBarVisibility(bool visibility)
+		{
+			gameObject.GetChild("enemy_hp").SetActive(visibility);
+		}
+
+		public void UpdateEnemyBar(Character enemy)
+		{
+			//TODO:
+		}
+
 		public void PushSkill(EnumAbilitesKeys key, bool is_push)
 		{
 			var skill = GetSkillFromList(key);
