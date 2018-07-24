@@ -8,6 +8,7 @@ namespace game
 	public class Character : MonoBehaviour
 	{
 		const float SKILLS_STORING_INTERVAL = 0.8f;
+		const float EVADING_SPEED = 3.1f;
 		
 		float queue_duration = 0;
 
@@ -222,7 +223,7 @@ namespace game
 			float ttl = 0;
 			do
 			{
-				transform.RotateAround(point, axis, Time.fixedDeltaTime * 180.0f * 3.1f);
+				transform.RotateAround(point, axis, Time.fixedDeltaTime * EVADING_SPEED * 180.0f);
 				ttl += Time.fixedDeltaTime;
 				yield return new WaitForFixedUpdate();
 			}

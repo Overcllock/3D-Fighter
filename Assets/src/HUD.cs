@@ -23,8 +23,7 @@ namespace game
 		SkillButtonList skill_list;
 		List<SkillButton> skill_buttons;
 
-		[HideInInspector]
-		public Image crosshair;
+		Image crosshair;
 
 		new protected void Awake()
 		{

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace game {
-	public class Main : MonoBehaviour {
+namespace game 
+{
+	public class Main : MonoBehaviour 
+	{
 		const float AUTOSAVE_INTERVAL = 60.0f;
 
 		public static Main self = null;
@@ -27,7 +29,8 @@ namespace game {
 		{
 			self = this;
 
-			all_keys = new KeyCode[] {
+			all_keys = new KeyCode[] 
+			{
 				(KeyCode)EnumAbilitesKeys.KEY_1,
 				(KeyCode)EnumAbilitesKeys.KEY_2,
 				(KeyCode)EnumAbilitesKeys.KEY_E,
@@ -36,7 +39,8 @@ namespace game {
 				(KeyCode)EnumAbilitesKeys.KEY_TAB
 			};
 
-			all_abilites_keys = new EnumAbilitesKeys[] {
+			all_abilites_keys = new EnumAbilitesKeys[] 
+			{
 				EnumAbilitesKeys.KEY_LMB_1,
 				EnumAbilitesKeys.KEY_LMB_2,
 				EnumAbilitesKeys.KEY_RMB,
@@ -49,7 +53,7 @@ namespace game {
 			};
 		}
 
-		void Start () 
+		void Start() 
 		{
 			bird = GameObject.Find("bird");
 

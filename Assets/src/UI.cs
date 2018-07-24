@@ -8,6 +8,7 @@ namespace game
 {
 	public class UI : MonoBehaviour 
 	{
+		[HideInInspector]
 		public List<UIWindow> windows = null;
 
 		void Awake() 
