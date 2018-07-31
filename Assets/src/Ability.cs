@@ -43,7 +43,6 @@ namespace game
 
 		protected virtual void Use()
 		{
-			Debug.Log("Using ability: " + this.anim_state);
 			inflictor.active_ability = this;
 			inflictor.PlayAnim(anim_state, is_animlock, delay);
 			SetCooldown();
