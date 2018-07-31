@@ -1,10 +1,15 @@
+using UnityEngine;
+
 namespace game
 {
     public class Jab : Ability
 	{
 		public Jab()
 		{
-			cooldown_ttl = 0.75f;
+			damage_min = 10.0f;
+			damage_max = 15.0f;
+			radius = 1.7f;
+			cooldown_ttl = 1.0f;
 			key = EnumAbilitesKeys.KEY_LMB_1;
 			anim_state = "Jab";
 			delay = 0.5f;
@@ -13,13 +18,12 @@ namespace game
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
+			inflictor.TryDamage(radius, damage_min, damage_max);
 		}
 
 		public override bool CheckConditions()
 		{
-			//TODO:
 			return true;
 		}
 	}

@@ -9,6 +9,8 @@ namespace game
 	{
 		const float SKILLS_STORING_INTERVAL = 0.8f;
 		const float EVADING_SPEED = 3.1f;
+
+		public static readonly float MAX_HP = 1500.0f;
 		
 		float queue_duration = 0;
 
@@ -17,6 +19,9 @@ namespace game
 		[HideInInspector]
 		public bool is_spawned = false;
 		public bool is_player = false;
+		public bool is_dummy = false;
+		[HideInInspector]
+		public bool is_invulnerable = false;
 
 		public bool is_use_ability
 		{
@@ -51,7 +56,19 @@ namespace game
 
 		public List<Ability> abilites = null;
 		public Ability active_ability = null;
-		Queue<Ability> skills_queue = null;
+		public Queue<Ability> skills_queue = null;
+
+		float hp = MAX_HP;
+		public float HP
+		{
+			get { return hp; }
+			set
+			{
+				hp = Mathf.Clamp(value, 0, MAX_HP);
+				if(hp == 0)
+					OnDie();
+			}
+		}
 
 		void Awake()
 		{
@@ -230,6 +247,57 @@ namespace game
 			while(ttl <= delay);
 		}
 
+		public Character TryDamage(float radius, float min, float max, bool wait_for_distance = false)
+		{
+			var ray = new Ray(transform.position, transform.forward);
+			var hits = Physics.SphereCastAll(ray, 0.5f, radius);
+			Character nearest_target = null;
+			
+			for(int i = 0; i < hits.Length; ++i)
+			{
+				var hit = hits[i];
+				var target = hit.collider.gameObject.GetComponent<Character>();
+				if(target != null && target != this)
+				{
+					if(nearest_target != null)
+					{
+						var current_dist = Vector3.Distance(transform.position, nearest_target.transform.position);
+						var new_dist = Vector3.Distance(transform.position, target.transform.position);
+						if(new_dist < current_dist)
+						{
+							nearest_target = target;
+							continue;
+						}
+					}
+					nearest_target = target;
+				}
+			}
+
+			if(nearest_target != null && !nearest_target.is_invulnerable)
+			{
+				if(wait_for_distance)
+				{
+					var dist = Vector3.Distance(transform.position, nearest_target.transform.position);
+					StartCoroutine(Main.WaitAndDo(
+						() => {
+							TryDamage(radius, min, max);
+						}, 
+						dist / (mctl.speed * 1.5f)
+					));
+				}
+				else
+					Damage(nearest_target, min, max);
+			}
+
+			return nearest_target;
+		}
+
+		void Damage(Character damaged, float min, float max)
+		{
+			var damage = Random.Range(min, max);
+			damaged.HP -= damage;
+		}
+
 		public void Spawn()
 		{
 			transform.position = GameObject.Find("startpoint_1").transform.position;
@@ -270,6 +338,11 @@ namespace game
 			}
 			
 			aab_defer_routine = null;
+		}
+
+		void OnDie()
+		{
+			HP = is_dummy ? MAX_HP : 0;
 		}
 
 		void OnSpawned()

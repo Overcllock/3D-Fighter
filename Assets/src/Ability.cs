@@ -12,6 +12,8 @@ namespace game
 		public float radius = 0;
 		public float cooldown = 0;
 		protected float cooldown_ttl = 0;
+		public float damage_min;
+		public float damage_max;
 		public float delay;
 		public float before_delay;
 		public bool is_animlock = true;
@@ -24,8 +26,13 @@ namespace game
 		{
 			get 
 			{ 
-				if(inflictor != null && is_animlock && inflictor.is_use_ability)
-					return false;
+				if(inflictor != null)
+				{
+					if(is_animlock && inflictor.is_use_ability)
+						return false;
+					if(!is_animlock && inflictor.active_ability == this)
+						return false;
+				}
 				return cooldown == 0 && CheckConditions(); 
 			}
 		}
@@ -36,6 +43,7 @@ namespace game
 
 		protected virtual void Use()
 		{
+			Debug.Log("Using ability: " + this.anim_state);
 			inflictor.active_ability = this;
 			inflictor.PlayAnim(anim_state, is_animlock, delay);
 			SetCooldown();
@@ -53,11 +61,9 @@ namespace game
 
 		public bool TryUseAbility()
 		{
-			if(!is_available)
-				return false;
 			if(inflictor == null)
 				return false;
-			if(!is_animlock && inflictor.active_ability == this)
+			if(!is_available)
 				return false;
 
 			Use();

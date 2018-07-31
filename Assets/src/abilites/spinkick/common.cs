@@ -4,6 +4,9 @@ namespace game
 	{
 		public Spinkick()
 		{
+			damage_min = 60.0f;
+			damage_max = 85.0f;
+			radius = 2.0f;
 			cooldown_ttl = 3;
 			key = EnumAbilitesKeys.KEY_RMB;
 			anim_state = "Spinkick";
@@ -13,13 +16,12 @@ namespace game
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
+			inflictor.TryDamage(radius, damage_min, damage_max);
 		}
 
 		public override bool CheckConditions()
 		{
-			//TODO:
 			return true;
 		}
 	}

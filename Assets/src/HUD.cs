@@ -7,6 +7,8 @@ namespace game
 {
 	public class HUD : UIWindow 
 	{
+		const float HPBAR_SPEED = 3.0f;
+
 		class SkillButton
 		{
 			public GameObject go;
@@ -72,7 +74,13 @@ namespace game
 
 		public void UpdateEnemyBar(Character enemy)
 		{
-			//TODO:
+			var hpbar = gameObject.GetChild("enemy_hp").GetChild("hpbar").GetComponent<Slider>();
+			var hptxt = gameObject.GetChild("enemy_hp").GetChild("txt").GetComponent<Text>();
+			if(!hpbar || !hptxt)
+				return;
+			
+			hptxt.text = string.Format("{0} / {1}", Mathf.RoundToInt(enemy.HP), Mathf.RoundToInt(Character.MAX_HP));
+			hpbar.value = Mathf.Lerp(hpbar.value, enemy.HP, Time.fixedDeltaTime * HPBAR_SPEED);
 		}
 
 		public void PushSkill(EnumAbilitesKeys key, bool is_push)

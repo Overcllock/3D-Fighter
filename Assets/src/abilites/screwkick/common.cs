@@ -4,6 +4,9 @@ namespace game
 	{
 		public Screwkick()
 		{
+			damage_min = 90.0f;
+			damage_max = 120.0f;
+			radius = 3.5f;
 			cooldown_ttl = 12;
 			key = EnumAbilitesKeys.KEY_2;
 			anim_state = "ScrewK";
@@ -13,14 +16,13 @@ namespace game
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
 			inflictor.mctl.moving_allowed = false;
+			inflictor.TryDamage(radius, damage_min, damage_max, wait_for_distance: true);
 		}
 
 		public override bool CheckConditions()
 		{
-			//TODO:
 			return true;
 		}
 
