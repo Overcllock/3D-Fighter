@@ -122,7 +122,7 @@ namespace game
 				var ab = abilites[i];
 				ab.Tick(Time.fixedDeltaTime);
 				if(hud != null)
-					hud.UpdateCooldown(ab.key, ab.cooldown_percent);
+					hud.UpdateCooldown(ab.key, ab.cooldown_percent, ab.cooldown);
 			}
 		}
 

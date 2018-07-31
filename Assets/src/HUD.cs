@@ -110,13 +110,14 @@ namespace game
 
 			var cooldown = skill.GetChild("cooldown");
 			if(cooldown != null)
-			{
-				var img = cooldown.GetComponent<Image>();
-				img.CrossFadeAlpha(is_available ? 1 : 0, 0.1f, false);
-			}
+				cooldown.GetComponent<Image>().CrossFadeAlpha(is_available ? 1 : 0, 0.1f, false);
+
+			var cooldown_ttl = skill.GetChild("cooldown_ttl");
+			if(cooldown_ttl != null)
+				cooldown_ttl.GetComponent<Text>().CrossFadeAlpha(is_available ? 1 : 0, 0.1f, false);
 		}
 
-		public void UpdateCooldown(EnumAbilitesKeys key, float percent)
+		public void UpdateCooldown(EnumAbilitesKeys key, float percent, float value)
 		{
 			if(key == EnumAbilitesKeys.KEY_LMB_2)
 				return;
@@ -125,7 +126,11 @@ namespace game
 			if(skill_go != null)
 			{
 				var cooldown = skill_go.GetChild("cooldown");
+				var cooldown_ttl = skill_go.GetChild("cooldown_ttl");
+				var ttl = Mathf.CeilToInt(value);
+
 				cooldown.GetComponent<Image>().fillAmount = percent;
+				cooldown_ttl.GetComponent<Text>().text = ttl > 0 ? ttl.ToString() : string.Empty;
 			}
 		}
 
