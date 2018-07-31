@@ -311,20 +311,14 @@ namespace game
 			OnRelease();
 		}
 
-		public void PlayAnim(string statename, bool is_animlock, float delay)
+		public void PlayAnim(string statename, float delay)
 		{
-			if(is_animlock)
-				animator.SetBool(statename, true);
-			else
+			if(aab_defer_routine != null)
 			{
-				if(aab_defer_routine != null)
-				{
-					StopCoroutine(aab_defer_routine);
-					aab_defer_routine = null;
-				}
-				animator.Play(statename, 0);
+				StopCoroutine(aab_defer_routine);
+				aab_defer_routine = null;
 			}
-			
+			animator.Play(statename, 0);
 			aab_defer_routine = StartCoroutine(AnimDefer(delay));
 		}
 

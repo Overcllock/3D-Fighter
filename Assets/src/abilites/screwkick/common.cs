@@ -9,8 +9,8 @@ namespace game
 			radius = 3.5f;
 			cooldown_ttl = 12;
 			key = EnumAbilitesKeys.KEY_2;
-			anim_state = "ScrewK";
-			delay = 1.2f;
+			anim_state = "ScrewKick";
+			delay = 1.05f;
 			is_animlock = true;
 		}
 

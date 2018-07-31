@@ -44,7 +44,7 @@ namespace game
 		protected virtual void Use()
 		{
 			inflictor.active_ability = this;
-			inflictor.PlayAnim(anim_state, is_animlock, delay);
+			inflictor.PlayAnim(anim_state, delay);
 			SetCooldown();
 		}
 
