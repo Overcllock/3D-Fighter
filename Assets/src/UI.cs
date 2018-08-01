@@ -10,10 +10,17 @@ namespace game
 	{
 		[HideInInspector]
 		public List<UIWindow> windows = null;
+		[HideInInspector]
+		public Canvas canvas;
 
 		void Awake() 
 		{
 			windows = new List<UIWindow>();
+		}
+
+		void Start()
+		{
+			canvas = GetComponent<Canvas>();
 		}
 
 		public void Open(string prefab)

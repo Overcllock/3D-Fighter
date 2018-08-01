@@ -30,6 +30,11 @@ namespace game
 			return GameObject.Instantiate(prefab, o.transform) as GameObject;
 		}
 
+		public static GameObject CreateChild(this GameObject o, Object prefab, Vector3 pos, Quaternion rot)
+		{
+			return GameObject.Instantiate(prefab, pos, rot, o.transform) as GameObject;
+		}
+
 		public static Transform FindRecursive(this Transform current, string name)   
 		{
 			for(int i = 0; i < current.childCount; ++i)

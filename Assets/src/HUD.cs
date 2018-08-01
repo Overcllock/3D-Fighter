@@ -102,6 +102,78 @@ namespace game
 			}
 		}
 
+		public void ShowDamageInfo(float value, Transform t)
+		{
+			var damage_label_prefab = Resources.Load("prefabs/damage_value");
+			var damage_label_go = gameObject.CreateChild(damage_label_prefab);
+
+			var y_offset = Vector3.up * Random.Range(1.5f, 2.0f);
+			var x_offset = Vector3.right * Random.Range(-0.5f, 0.5f);
+			var w_pos = t.position + x_offset + y_offset;
+
+			damage_label_go.GetComponent<RectTransform>().anchoredPosition = GetAnchorPosition(w_pos);
+			damage_label_go.GetComponent<Text>().text = Mathf.CeilToInt(value).ToString();
+			
+			StartCoroutine(HideDamageInfoWithFading(
+				label: damage_label_go,
+				delay: 1.0f, 
+				w_pos: w_pos,
+				x_offset: x_offset,
+				y_offset: y_offset,
+				keep_pos: true, 
+				target_transform: t
+			));
+			
+		}
+
+		IEnumerator HideDamageInfoWithFading(
+			GameObject label, 
+			float delay, 
+			Vector3 w_pos,
+			Vector3 y_offset,
+			Vector3 x_offset,
+			float y_speed = 0.75f, 
+			float a_speed = 0.15f, 
+			bool keep_pos = false, 
+			Transform target_transform = null
+		)
+		{
+			float ttl = 0;
+			var rect = label.GetComponent<RectTransform>();
+			var text = label.GetComponent<Text>();
+			Vector2 current_pos = rect.anchoredPosition;
+			float y_dist = 0;
+
+			while(ttl < delay)
+			{
+				if(keep_pos && target_transform != null)
+				{
+					current_pos = GetAnchorPosition(target_transform.position + x_offset + y_offset);
+					rect.anchoredPosition = new Vector2(current_pos.x, current_pos.y + y_dist);
+				}
+
+				y_dist += y_speed;
+				rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y + y_speed);
+				text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a - a_speed);
+				ttl += Time.fixedDeltaTime;
+				yield return new WaitForFixedUpdate();
+			}
+
+			Destroy(label);
+		}
+
+		Vector2 GetAnchorPosition(Vector3 world_pos)
+		{
+			Vector3 view_pos = Camera.main.WorldToViewportPoint(world_pos);
+			var canvas_rect = root.canvas.GetComponent<RectTransform>();
+			var canvas_size = canvas_rect.sizeDelta;
+			Vector2 ui_pos = new Vector2(
+				view_pos.x * canvas_size.x - canvas_size.x * 0.5f, 
+				view_pos.y * canvas_size.y - canvas_size.y * 0.5f
+			); 
+			return ui_pos;
+		}
+
 		public void UpdateSkillButtonAlpha(EnumAbilitesKeys key, bool is_available)
 		{
 			var skill = GetSkillFromList(key);

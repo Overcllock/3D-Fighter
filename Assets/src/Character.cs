@@ -296,6 +296,8 @@ namespace game
 		{
 			var damage = Random.Range(min, max);
 			damaged.HP -= damage;
+			if(hud != null)
+				hud.ShowDamageInfo(damage, damaged.transform);
 		}
 
 		public void Spawn()
