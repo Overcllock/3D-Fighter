@@ -338,7 +338,7 @@ namespace game
 
 		void OnDie()
 		{
-			HP = is_dummy ? MAX_HP : 0;
+			hp = is_dummy ? MAX_HP : 0;
 		}
 
 		void OnSpawned()
