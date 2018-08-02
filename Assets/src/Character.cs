@@ -9,6 +9,7 @@ namespace game
 	{
 		const float SKILLS_STORING_INTERVAL = 0.8f;
 		const float EVADING_SPEED = 3.1f;
+		const float EVADING_ANGLE = 180.0f;
 
 		public static readonly float MAX_HP = 1500.0f;
 		
@@ -54,9 +55,9 @@ namespace game
 		[HideInInspector]
 		public HUD hud = null;
 
-		public List<Ability> abilites = null;
+		List<Ability> abilites = null;
 		public Ability active_ability = null;
-		public Queue<Ability> skills_queue = null;
+		Queue<Ability> abilites_queue = null;
 
 		float hp = MAX_HP;
 		public float HP
@@ -72,7 +73,7 @@ namespace game
 
 		void Awake()
 		{
-			skills_queue = new Queue<Ability>();
+			abilites_queue = new Queue<Ability>();
 		}
 
 		void Start()
@@ -91,7 +92,7 @@ namespace game
 			if(is_player)
 			{
 				ProcessInput();
-				UpdateSkillsQueue();
+				UpdateAbilitesQueue();
 			}
 		}
 
@@ -165,9 +166,9 @@ namespace game
 			}
 		}
 
-		void UpdateSkillsQueue()
+		void UpdateAbilitesQueue()
 		{
-			if(skills_queue.Count == 0)
+			if(abilites_queue.Count == 0)
 			{
 				queue_duration = 0;
 				return;
@@ -176,16 +177,16 @@ namespace game
 			queue_duration += Time.fixedDeltaTime;
 			if(queue_duration >= SKILLS_STORING_INTERVAL)
 			{
-				skills_queue.Dequeue();
+				abilites_queue.Dequeue();
 				queue_duration = 0;
-				if(skills_queue.Count == 0)
+				if(abilites_queue.Count == 0)
 					return;
 			}
 
-			var skill = skills_queue.Dequeue();
+			var skill = abilites_queue.Dequeue();
 			if(!skill.TryUseAbility())
-				if(!skills_queue.Contains(skill))
-					skills_queue.Enqueue(skill);
+				if(!abilites_queue.Contains(skill))
+					abilites_queue.Enqueue(skill);
 		}
 
 		void ProcessInput()
@@ -200,8 +201,8 @@ namespace game
 					var ab = abilites.FindByKey((EnumAbilitesKeys)key);
 					if(ab != null && !ab.TryUseAbility())
 					{
-						if(!skills_queue.Contains(ab))
-							skills_queue.Enqueue(ab);
+						if(!abilites_queue.Contains(ab))
+							abilites_queue.Enqueue(ab);
 					}
 				}
 				if(hud != null)
@@ -226,8 +227,8 @@ namespace game
 						ab = abilites.FindByKey(EnumAbilitesKeys.KEY_LMB_2);
 					if(ab != null && !ab.TryUseAbility())
 					{
-						if(!skills_queue.Contains(ab))
-							skills_queue.Enqueue(ab);
+						if(!abilites_queue.Contains(ab))
+							abilites_queue.Enqueue(ab);
 					}
 				}
 				if(hud != null)
@@ -240,11 +241,11 @@ namespace game
 			float ttl = 0;
 			do
 			{
-				transform.RotateAround(point, axis, Time.fixedDeltaTime * EVADING_SPEED * 180.0f);
+				transform.RotateAround(point, axis, Time.fixedDeltaTime * EVADING_SPEED * EVADING_ANGLE);
 				ttl += Time.fixedDeltaTime;
 				yield return new WaitForFixedUpdate();
 			}
-			while(ttl <= delay);
+			while(ttl < delay);
 		}
 
 		public Character TryDamage(float radius, float min, float max, bool wait_for_distance = false)
@@ -310,7 +311,7 @@ namespace game
 		public void Release()
 		{
 			gameObject.SetActive(false);
-			OnRelease();
+			OnReleased();
 		}
 
 		public void PlayAnim(string statename, float delay)
@@ -332,7 +333,6 @@ namespace game
 				active_ability.Defer();
 				active_ability = null;
 			}
-			
 			aab_defer_routine = null;
 		}
 
@@ -352,11 +352,12 @@ namespace game
 			cam.lockCamera = false;
 			cam.cutsceneMode = false;
 
-			if(Main.self.bird != null)
-				Main.self.bird.SetActive(false);
+			var bird = Main.self.bird;
+			if(bird != null)
+				bird.SetActive(false);
 		}
 
-		void OnRelease()
+		void OnReleased()
 		{
 			if(cam == null)
 				InitCamera();

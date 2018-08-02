@@ -22,7 +22,7 @@ namespace game
 			string username = username_input.text;
 			if(username == string.Empty)
 			{
-				//TODO: show popup
+				//TODO: show error popup
 				Debug.LogWarning("Username field is empty.");
 				return;
 			}

@@ -9,7 +9,10 @@ namespace game
 	public class MovementController : MonoBehaviour 
 	{
 		const float MIN_VELOCITY_MAGNITUDE = 0.6f;
+		const float SPEED_SMOOTH_TIME = 0.1f;
+		const float STRAFE_ROTATION_SPEED = 10f;
 
+		//TODO: move to input settings
 		KeyCode[] ALL_KEYS = new KeyCode[] {
 			KeyCode.W,
 			KeyCode.A,
@@ -23,17 +26,20 @@ namespace game
 		vThirdPersonCamera cam;
 
 		public float speed = 5.0f;
-		public float speed_smooth_time = 0.1f;
-		public float strafe_rotation_speed = 10f;
 		public bool moving_allowed;
 		public bool keep_camera_look_at;
 
 		float current_speed;
 		float speed_smooth_velocity;
 
-		void Start() 
-		{	keep_camera_look_at = false;
+		void Awake()
+		{
+			keep_camera_look_at = false;
 			last_input = new Stack<KeyCode>(ALL_KEYS.Length);
+		}
+
+		void Start() 
+		{	
 			cctl = gameObject.GetComponent<CharacterController>();
 			animator = gameObject.GetComponent<Animator>();
 			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
@@ -55,9 +61,8 @@ namespace game
 		void FixedUpdate() 
 		{
 			Move();
-
 			Main.self.player.is_moving = cctl.velocity.magnitude > MIN_VELOCITY_MAGNITUDE;
-			animator.SetBool("Run", Main.self.player.is_moving && Main.self.player.active_ability == null);
+			animator.SetBool("Run", Main.self.player.is_moving && !Main.self.player.is_use_ability);
 		}
 
 		void Move()
@@ -75,7 +80,7 @@ namespace game
 			var input_directory = input.normalized;
 
 			float target_speed = speed * input_directory.magnitude;
-			current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref speed_smooth_velocity, speed_smooth_time);
+			current_speed = Mathf.SmoothDamp(current_speed, target_speed, ref speed_smooth_velocity, SPEED_SMOOTH_TIME);
 
 			var velocity = Vector3.ClampMagnitude(transform.forward * current_speed, target_speed);
 			cctl.Move(velocity * Time.fixedDeltaTime);
@@ -99,7 +104,7 @@ namespace game
 		void RotateWithAnotherTransform(Transform referenceTransform, float angleOffset = 0.0f)
         {
             var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), strafe_rotation_speed * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
         }
 
 		Vector3 GetDirectory()

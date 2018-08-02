@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace game
 {
 	public static class Extensions
 	{
+		public static void CrossFadeAlpha<T>(this GameObject o, float alpha, float duration, bool ignore_time_scale = false) where T : Graphic
+		{
+			if(o != null)
+				o.GetComponent<T>().CrossFadeAlpha(alpha, duration, ignore_time_scale);
+		}
+
 		public static Ability FindByKey(this List<Ability> abs, EnumAbilitesKeys key)
 		{
 			for(int i = 0; i < abs.Count; ++i)

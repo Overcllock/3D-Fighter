@@ -14,19 +14,13 @@ namespace game
 		{
 			MakeButton("but_continue", OnContinue);
 			MakeButton("but_exit", OnMainMenu);
-			StartCoroutine(LoadWindow());
+			StartCoroutine(Main.WaitAndDo(() => { window_loaded = true; }, LOADING_DELAY));
 		}
 
 		void Update()
 		{
 			if(Input.GetKeyDown(KeyCode.Escape) && window_loaded)
 				OnContinue();
-		}
-
-		IEnumerator LoadWindow()
-		{
-			yield return new WaitForSecondsRealtime(LOADING_DELAY);
-			window_loaded = true;
 		}
 
 		void OnContinue()

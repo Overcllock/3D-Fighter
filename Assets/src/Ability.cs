@@ -8,14 +8,14 @@ namespace game
 	{
 		public Character inflictor = null;
 		public EnumAbilitesKeys key = EnumAbilitesKeys.NONE;
-		public string anim_state = "Idle";
-		public float radius = 0;
+		protected string anim_state = "Idle";
+		protected float radius = 0;
 		public float cooldown = 0;
 		protected float cooldown_ttl = 0;
-		public float damage_min;
-		public float damage_max;
-		public float delay;
-		public float before_delay;
+		protected float damage_min;
+		protected float damage_max;
+		protected float delay;
+		protected float before_delay;
 		public bool is_animlock = true;
 
 		public float cooldown_percent

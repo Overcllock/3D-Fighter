@@ -29,6 +29,7 @@ namespace game
 		{
 			self = this;
 
+			//TODO: move to config/input settings
 			all_keys = new KeyCode[] 
 			{
 				(KeyCode)EnumAbilitesKeys.KEY_1,
@@ -56,13 +57,8 @@ namespace game
 		void Start() 
 		{
 			bird = GameObject.Find("bird");
-
 			account = Account.Load() ?? new Account();
-			if(account.IsValid)
-				ui_root.Open("prefabs/MainMenu");
-			else
-				ui_root.Open("prefabs/SignUp");
-
+			ui_root.Open(account.IsValid ? "prefabs/MainMenu" : "prefabs/SignUp");
 			StartCoroutine(AutoSave());
 		}
 

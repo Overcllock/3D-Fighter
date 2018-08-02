@@ -14,7 +14,6 @@ namespace game
 			public GameObject go;
 			public EnumAbilitesKeys key;
 
-			public SkillButton() { }
 			public SkillButton(GameObject go, EnumAbilitesKeys key)
 			{
 				this.go = go;
@@ -181,12 +180,10 @@ namespace game
 				return;
 
 			var cooldown = skill.GetChild("cooldown");
-			if(cooldown != null)
-				cooldown.GetComponent<Image>().CrossFadeAlpha(is_available ? 1 : 0, 0.1f, false);
-
 			var cooldown_ttl = skill.GetChild("cooldown_ttl");
-			if(cooldown_ttl != null)
-				cooldown_ttl.GetComponent<Text>().CrossFadeAlpha(is_available ? 1 : 0, 0.1f, false);
+
+			cooldown.CrossFadeAlpha<Image>(is_available ? 1 : 0, 0.1f, false);
+			cooldown_ttl.CrossFadeAlpha<Text>(is_available ? 1 : 0, 0.1f, false);
 		}
 
 		public void UpdateCooldown(EnumAbilitesKeys key, float percent, float value)
