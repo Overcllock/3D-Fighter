@@ -28,10 +28,12 @@ namespace game
 		{
 			get { return active_ability != null; }
 		}
+
 		public bool has_target
 		{
 			get { return target != null; }
 		}	
+
 		public float distance_to_target
 		{
 			get 
@@ -236,6 +238,11 @@ namespace game
 			}
 		}
 
+		public bool HasTargetInRadius(float radius)
+		{
+			return FindNearestTarget(radius) != null;
+		}
+
 		public IEnumerator Evade(Vector3 point, Vector3 axis, float delay)
 		{
 			float ttl = 0;
@@ -248,12 +255,12 @@ namespace game
 			while(ttl < delay);
 		}
 
-		public Character TryDamage(float radius, float min, float max, bool wait_for_distance = false)
+		public Character FindNearestTarget(float radius = Mathf.Infinity)
 		{
 			var ray = new Ray(transform.position, transform.forward);
 			var hits = Physics.SphereCastAll(ray, 0.5f, radius);
 			Character nearest_target = null;
-			
+
 			for(int i = 0; i < hits.Length; ++i)
 			{
 				var hit = hits[i];
@@ -273,6 +280,13 @@ namespace game
 					nearest_target = target;
 				}
 			}
+
+			return nearest_target;
+		}
+
+		public Character TryDamage(float radius, float min, float max, bool wait_for_distance = false)
+		{
+			var nearest_target = FindNearestTarget(radius);
 
 			if(nearest_target != null && !nearest_target.is_invulnerable)
 			{
