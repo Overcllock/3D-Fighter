@@ -7,6 +7,25 @@ namespace game
 {
 	public class Character : MonoBehaviour
 	{
+		public class Control
+		{
+			public EnumControl type;
+			public float duration;
+			public string vfx;
+
+			public UnityAction OnStart;
+			public UnityAction OnFinish;
+
+			public Control(EnumControl type, float duration, string vfx = "", UnityAction OnStart = null, UnityAction OnFinish = null)
+			{
+				this.type = type;
+				this.duration = duration;
+				this.vfx = vfx;
+				this.OnStart = OnStart;
+				this.OnFinish = OnFinish;
+			}
+		}
+
 		const float SKILLS_STORING_INTERVAL = 0.8f;
 		const float EVADING_SPEED = 3.1f;
 		const float EVADING_ANGLE = 180.0f;
@@ -34,6 +53,11 @@ namespace game
 			get { return target != null; }
 		}	
 
+		public bool has_control
+		{
+			get { return control != null; }
+		}
+
 		public float distance_to_target
 		{
 			get 
@@ -46,10 +70,10 @@ namespace game
 
 		vThirdPersonCamera cam;
 		Animator animator = null;
+		float anim_speed;
 		Coroutine aab_defer_routine = null;
-
-		[HideInInspector]
-		public EnumControl control = EnumControl.NONE;
+		Coroutine process_control = null;
+		Control control = null;
 		[HideInInspector]
 		public Character target = null;
 		[HideInInspector]
@@ -82,6 +106,7 @@ namespace game
 		{
 			animator = GetComponent<Animator>();
 			mctl = GetComponent<MovementController>();
+			anim_speed = animator.speed;
 			InitCamera();
 			InitAbilites();
 		}
@@ -238,9 +263,61 @@ namespace game
 			}
 		}
 
+		public void FreezeAnim()
+		{
+			anim_speed = animator.speed;
+			animator.speed = 0f;
+		}
+
+		public void UnfreezeAnim()
+		{
+			animator.speed = anim_speed;
+		}
+
 		public bool HasTargetInRadius(float radius)
 		{
 			return FindNearestTarget(radius) != null;
+		}
+
+		public void SetControl(Control control)
+		{
+			if(process_control != null)
+			{
+				StopCoroutine(process_control);
+				process_control = null;
+			}
+
+			if(has_control)
+				ResetControl();
+
+			if(control.vfx != string.Empty)
+				ShowVFX(control.vfx);
+			
+			if(control.OnStart != null)
+				control.OnStart();
+
+			this.control = control;
+			process_control = Main.self.StartCoroutine(Main.WaitAndDo(ResetControl, control.duration));
+		}
+
+		public void ResetControl()
+		{
+			if(control == null)
+				return;
+
+			if(control.vfx != string.Empty)
+				HideVFX(control.vfx);
+
+			if(control.OnFinish != null)
+				control.OnFinish();
+
+			if(process_control != null)
+			{
+				Main.self.StopCoroutine(process_control);
+				process_control = null;
+			}
+
+			control = null;
 		}
 
 		public IEnumerator Evade(Vector3 point, Vector3 axis, float delay)
@@ -326,6 +403,20 @@ namespace game
 		{
 			gameObject.SetActive(false);
 			OnReleased();
+		}
+
+		public void ShowVFX(string name)
+		{
+			var vfx = gameObject.GetChild(name).GetComponent<ParticleSystem>();
+			if(vfx != null)
+				vfx.Play();
+		}
+
+		public void HideVFX(string name)
+		{
+			var vfx = gameObject.GetChild(name).GetComponent<ParticleSystem>();
+			if(vfx != null)
+				vfx.Stop();
 		}
 
 		public void PlayAnim(string statename, float delay)

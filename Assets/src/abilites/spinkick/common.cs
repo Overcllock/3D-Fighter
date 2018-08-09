@@ -1,7 +1,12 @@
+using UnityEngine;
+using UnityEngine.Events;
+
 namespace game
 {
     public class Spinkick : Ability
 	{
+		Character damaged = null;
+
 		public Spinkick()
 		{
 			damage_min = 60.0f;
@@ -17,12 +22,35 @@ namespace game
 		protected override void Use()
 		{
 			base.Use();
-			inflictor.TryDamage(radius, damage_min, damage_max);
+			damaged = inflictor.TryDamage(radius, damage_min, damage_max);
+			if(damaged != null)
+			{
+				damaged.SetControl(new Character.Control(
+					type: EnumControl.STUN,
+					duration: 2.0f,
+					vfx: "stun",
+					OnStart: new UnityAction(() => {
+						damaged.FreezeAnim();
+					}),
+					OnFinish: new UnityAction(() => {
+						damaged.UnfreezeAnim();
+					})
+				));
+			}
 		}
 
 		public override bool CheckConditions()
 		{
 			return true;
+		}
+
+		public override void Defer()
+		{
+			if(damaged != null)
+			{
+				damaged.HideVFX("stun");
+				damaged.UnfreezeAnim();
+			}
 		}
 	}
 }
