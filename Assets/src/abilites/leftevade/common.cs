@@ -18,9 +18,12 @@ namespace game
 		{
 			//TODO:
 			base.Use();
+			inflictor.is_invulnerable = true;
 			inflictor.mctl.moving_allowed = false;
 			inflictor.mctl.keep_camera_look_at = true;
-			inflictor.StartCoroutine(inflictor.Evade(inflictor.target.transform.position, Vector3.up, delay / 2));
+
+			var target = inflictor.FindNearestTarget(radius);
+			inflictor.StartCoroutine(inflictor.Evade(target.transform.position, Vector3.up, delay / 2));
 		}
 
 		public override void Tick(float dt)
@@ -32,11 +35,12 @@ namespace game
 
 		public override bool CheckConditions()
 		{
-			return inflictor.has_target && inflictor.distance_to_target <= radius;
+			return inflictor.HasTargetInRadius(radius);
 		}
 
 		public override void Defer()
 		{
+			inflictor.is_invulnerable = false;
 			inflictor.mctl.moving_allowed = true;
 			inflictor.mctl.keep_camera_look_at = false;
 		}
