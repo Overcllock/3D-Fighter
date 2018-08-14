@@ -68,13 +68,13 @@ namespace game
 
 		public void SetEnemyBarVisibility(bool visibility)
 		{
-			gameObject.GetChild("enemy_hp").SetActive(visibility);
+			gameObject.GetChild("enemy_bar").SetActive(visibility);
 		}
 
 		public void UpdateEnemyBar(Character enemy)
 		{
-			var hpbar = gameObject.GetChild("enemy_hp").GetChild("hpbar").GetComponent<Slider>();
-			var hptxt = gameObject.GetChild("enemy_hp").GetChild("txt").GetComponent<Text>();
+			var hpbar = gameObject.GetChild("enemy_bar").GetChild("hpbar").GetComponent<Slider>();
+			var hptxt = gameObject.GetChild("enemy_bar").GetChild("txt").GetComponent<Text>();
 			if(!hpbar || !hptxt)
 				return;
 			
