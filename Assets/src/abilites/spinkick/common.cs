@@ -43,14 +43,5 @@ namespace game
 		{
 			return true;
 		}
-
-		public override void Defer()
-		{
-			if(damaged != null)
-			{
-				damaged.HideVFX("stun");
-				damaged.UnfreezeAnim();
-			}
-		}
 	}
 }

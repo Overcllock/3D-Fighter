@@ -5224,7 +5224,6 @@ MonoBehaviour:
   is_player: 1
   is_dummy: 0
   is_invulnerable: 0
-  control: 0
   target: {fileID: 0}
   mctl: {fileID: 0}
   hud: {fileID: 0}
@@ -10047,7 +10046,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1531745788091430}
   serializedVersion: 5
   lengthInSec: 1
-  simulationSpeed: 0.6
+  simulationSpeed: 0.75
   stopAction: 0
   looping: 1
   prewarm: 0
