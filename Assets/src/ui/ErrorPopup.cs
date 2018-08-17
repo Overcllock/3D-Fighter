@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 namespace game
 {
-	public class ErrorPopup : UIWindow 
-	{
+    public class ErrorPopup : UIWindow 
+    {
         public static readonly string PREFAB = "prefabs/ErrorPopup";
 
         Text error_msg;
@@ -18,15 +18,15 @@ namespace game
             error_msg = transform.FindRecursive("error_msg").GetComponent<Text>();
         }
 
-		void Start() 
-		{
-			MakeButton("but_ok", Close);
+        void Start() 
+        {
+            MakeButton("but_ok", Close);
             error_msg.text = message;
-		}
+        }
 
         public void SetErrorMessage(string message)
         {
             this.message = message;
         }
-	}
+    }
 }
