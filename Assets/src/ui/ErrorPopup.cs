@@ -9,7 +9,7 @@ namespace game
 	{
         public static readonly string PREFAB = "prefabs/ErrorPopup";
 
-		Text error_msg;
+        Text error_msg;
         string message;
 
         new protected void Awake()
