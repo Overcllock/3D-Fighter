@@ -5,24 +5,20 @@ namespace game
 {
     public class Spinkick : Ability
 	{
+		const string CONF_PATH = "Assets/src/abilites/spinkick/conf.json";
+
 		Character damaged = null;
 
-		public Spinkick()
+		public Spinkick(Character inflictor) : base()
 		{
-			damage_min = 60.0f;
-			damage_max = 85.0f;
-			radius = 2.0f;
-			cooldown_ttl = 3;
-			key = EnumAbilitesKeys.KEY_RMB;
-			anim_state = "Spinkick";
-			delay = 0.55f;
-			is_animlock = true;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()
 		{
 			base.Use();
-			damaged = inflictor.TryDamage(radius, damage_min, damage_max);
+			damaged = inflictor.TryDamage(conf.radius, conf.damage_min, conf.damage_max);
 			if(damaged != null)
 			{
 				damaged.SetControl(new Character.Control(

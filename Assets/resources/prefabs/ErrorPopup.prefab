@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 114908757516174416}
   - component: {fileID: 114359052285224236}
   m_Layer: 5
-  m_Name: button
+  m_Name: but_ok
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,8 +104,9 @@ GameObject:
   m_Component:
   - component: {fileID: 224645702990796368}
   - component: {fileID: 95010901084847258}
+  - component: {fileID: 114678361852807060}
   m_Layer: 5
-  m_Name: ErrorLog
+  m_Name: ErrorPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122,7 +123,7 @@ GameObject:
   - component: {fileID: 222701305683526154}
   - component: {fileID: 114827868303087426}
   m_Layer: 5
-  m_Name: text_error
+  m_Name: error_msg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -274,6 +275,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114678361852807060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1656382603141730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0418d286dd4946fe899c1d5072124bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114827868303087426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -306,7 +318,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0422\u0435\u043A\u0441\u0442 \u043E\u0448\u0438\u0431\u043A\u0438"
+  m_Text: 
 --- !u!114 &114833317156569692
 MonoBehaviour:
   m_ObjectHideFlags: 1

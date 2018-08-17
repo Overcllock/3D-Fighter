@@ -6,7 +6,9 @@ namespace game
 {
 	public class PauseWindow : UIWindow 
 	{
-		const float LOADING_DELAY = 0.7f;
+		public static readonly string PREFAB = "prefabs/Pause";
+
+		const float LOADING_DELAY = 0.5f;
 		
 		bool window_loaded = false;
 
@@ -34,7 +36,7 @@ namespace game
 			Main.self.player.Release();
 			Main.self.SetPause(false);
 			root.CloseAll();
-			root.Open("prefabs/MainMenu");
+			root.Open<MainWindow>();
 		}
 	}
 }

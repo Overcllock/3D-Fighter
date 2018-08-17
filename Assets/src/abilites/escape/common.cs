@@ -2,10 +2,12 @@ namespace game
 {
     public class Escape : Ability
 	{
-		public Escape()
+		const string CONF_PATH = "Assets/src/abilites/escape/conf.json";
+
+		public Escape(Character inflictor) : base()
 		{
-			cooldown_ttl = 24;
-			key = EnumAbilitesKeys.KEY_TAB;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()

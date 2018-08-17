@@ -2,10 +2,12 @@ namespace game
 {
     public class Counter : Ability
 	{
-		public Counter()
+		const string CONF_PATH = "Assets/src/abilites/counter/conf.json";
+		
+		public Counter(Character inflictor) : base()
 		{
-			cooldown_ttl = 0;
-			key = EnumAbilitesKeys.NONE;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()

@@ -81,7 +81,7 @@ namespace game
 		[HideInInspector]
 		public HUD hud = null;
 
-		List<Ability> abilites = null;
+		public List<Ability> abilites = null;
 		public Ability active_ability = null;
 		Queue<Ability> abilites_queue = null;
 
@@ -130,17 +130,19 @@ namespace game
 
 		void InitAbilites()
 		{
-			abilites = new List<Ability>();
-			for(int i = 0; i < Main.self.all_abilites_keys.Length; ++i)
+			abilites = new List<Ability>()
 			{
-				var key = Main.self.all_abilites_keys[i];
-				var ability = Ability.GetByKey(key);
-				if(ability != null)
-				{
-					ability.inflictor = this;
-					abilites.Add(ability);
-				}
-			}
+				new Jab(this),
+				new Kick(this),
+				new Counter(this),
+				new Dodge(this),
+				new Escape(this),
+				new Headspring(this),
+				new LeftEvade(this),
+				new RightEvade(this),
+				new Spinkick(this),
+				new Screwkick(this)
+			};
 		}
 
 		void TickAbilites()
@@ -150,7 +152,7 @@ namespace game
 				var ab = abilites[i];
 				ab.Tick(Time.fixedDeltaTime);
 				if(hud != null)
-					hud.UpdateCooldown(ab.key, ab.cooldown_percent, ab.cooldown);
+					hud.UpdateCooldown(ab.conf.axis, ab.cooldown_percent, ab.cooldown);
 			}
 		}
 
@@ -218,48 +220,24 @@ namespace game
 
 		void ProcessInput()
 		{
-			//Keyboard
-			for(int i = 0; i < Main.self.all_keys.Length; ++i)
-			{
-				var key = Main.self.all_keys[i];
-				bool is_held = Input.GetKey(key);
-				if(is_held)
-				{
-					var ab = abilites.FindByKey((EnumAbilitesKeys)key);
-					if(ab != null && !ab.TryUseAbility())
-					{
-						if(!abilites_queue.Contains(ab))
-							abilites_queue.Enqueue(ab);
-					}
-				}
-				if(hud != null)
-					hud.PushSkill((EnumAbilitesKeys)key, is_held);
-			}
-
-			if(Input.GetKeyDown(KeyCode.Escape))
+			//Pause
+			if(Input.GetButtonDown("Cancel"))
 			{
 				Main.self.SetPause(!Main.self.is_paused);
 				cam.SetCursorVisibility(Main.self.is_paused);
 			}
 
-			//Mouse
-			for(int i = (int)EnumAbilitesKeys.KEY_LMB_1; i <= (int)EnumAbilitesKeys.KEY_RMB; ++i)
+			for(int i = 0; i < abilites.Count; ++i)
 			{
-				bool is_held = Input.GetMouseButton(i);
-				Ability ab = null;
+				var ability = abilites[i];
+				bool is_held = ability.conf.axis.Length > 0 && Input.GetAxis(ability.conf.axis) > 0;
 				if(is_held)
 				{
-					ab = abilites.FindByKey((EnumAbilitesKeys)i);
-					if(i == (int)EnumAbilitesKeys.KEY_LMB_1 && active_ability == ab)
-						ab = abilites.FindByKey(EnumAbilitesKeys.KEY_LMB_2);
-					if(ab != null && !ab.TryUseAbility())
-					{
-						if(!abilites_queue.Contains(ab))
-							abilites_queue.Enqueue(ab);
-					}
+					if(!ability.TryUseAbility() && !abilites_queue.Contains(ability))
+						abilites_queue.Enqueue(ability);
 				}
 				if(hud != null)
-					hud.PushSkill((EnumAbilitesKeys)i, is_held);
+					hud.PushSkill(ability.conf.axis, is_held);
 			}
 		}
 

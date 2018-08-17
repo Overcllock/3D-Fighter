@@ -7,6 +7,8 @@ namespace game
 {
 	public class MainWindow : UIWindow
 	{
+		public static readonly string PREFAB = "prefabs/MainMenu";
+
 		void Start() 
 		{
 			Fill();
@@ -17,7 +19,7 @@ namespace game
 		void OnPlay()
 		{
 			Close();
-			root.Open("prefabs/HUD");
+			root.Open<HUD>();
 			Main.self.player.Spawn();
 		}
 
@@ -37,26 +39,9 @@ namespace game
 			defeat_info.text = "Поражений: " + acc.loses;
 			rate_info.text = "Рейтинг побед: " + acc.winrate + '%';
 
-			//TODO: move to config
-			switch(acc.league)
-			{
-				case EnumLeague.SILVER:
-					league_info.sprite = Resources.Load<Sprite>("sprites/rank_silver");
-					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/rank_silver_anim");
-					break;
-				case EnumLeague.GOLD:
-					league_info.sprite = Resources.Load<Sprite>("sprites/button-rank_gold");
-					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/button-rank_gold-anim");
-					break;
-				case EnumLeague.PLATINUM:
-					league_info.sprite = Resources.Load<Sprite>("sprites/rank_platinum");
-					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/rank-platinum_anim");
-					break;
-				default:
-					league_info.sprite = Resources.Load<Sprite>("sprites/rank_bronze");
-					rank_info_anim.sprite = Resources.Load<Sprite>("sprites/rank_bronze_anim");
-					break;
-			}
+			var conf_data = JSON.ReadConfig<Dictionary<EnumLeague, string[]>>("config/league_sprites.json");
+			league_info.sprite = Resources.Load<Sprite>(conf_data[acc.league][0]);
+			rank_info_anim.sprite = Resources.Load<Sprite>(conf_data[acc.league][1]);
 		}
 	}
 }

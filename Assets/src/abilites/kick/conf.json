@@ -1,0 +1,11 @@
+{
+    "damage_min"    : 20.0,
+    "damage_max"    : 30.0,
+    "delay"         : 0.45,
+    "before_delay"  : 0.3,
+    "radius"        : 1.7,
+    "cooldown_ttl"  : 0.0,
+    "is_animlock"   : 0,
+    "anim_state"    : "Hikick",
+    "axis"          : "LMB2"
+}

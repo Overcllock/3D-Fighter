@@ -2,36 +2,31 @@ namespace game
 {
     public class Kick : Ability
 	{
+		const string CONF_PATH = "Assets/src/abilites/kick/conf.json";
+
 		UnityEngine.Coroutine wait_coroutine = null;
 
-		public Kick()
+		public Kick(Character inflictor) : base()
 		{
-			damage_min = 20.0f;
-			damage_max = 30.0f;
-			radius = 1.7f;
-			cooldown_ttl = 0.0f;
-			key = EnumAbilitesKeys.KEY_LMB_2;
-			anim_state = "Hikick";
-			delay = 0.45f;
-			before_delay = 0.3f;
-			is_animlock = false;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()
 		{
 			if(wait_coroutine == null)
-				wait_coroutine = inflictor.StartCoroutine(Main.WaitAndDo(WaitAndUse, before_delay));
+				wait_coroutine = inflictor.StartCoroutine(Main.WaitAndDo(WaitAndUse, conf.before_delay));
 		}
 
 		void WaitAndUse()
 		{
 			base.Use();
-			inflictor.TryDamage(radius, damage_min, damage_max);
+			inflictor.TryDamage(conf.radius, conf.damage_min, conf.damage_max);
 		}
 
 		public override bool CheckConditions()
 		{
-			return true;
+			return inflictor.active_ability != null && inflictor.active_ability.conf.anim_state == "Jab";
 		}
 
 		public override void Defer()

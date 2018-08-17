@@ -1,0 +1,6 @@
+{
+    "0": ["sprites/rank_bronze", "sprites/rank_bronze_anim"],
+    "1": ["sprites/rank_silver", "sprites/rank_silver_anim"],
+    "2": ["sprites/button-rank_gold", "sprites/button-rank_gold-anim"],
+    "3": ["sprites/rank_platinum", "sprites/rank-platinum_anim"]
+}

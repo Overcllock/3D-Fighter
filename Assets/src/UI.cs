@@ -12,6 +12,8 @@ namespace game
 		public List<UIWindow> windows = null;
 		[HideInInspector]
 		public Canvas canvas;
+		
+		public delegate void UIInitDelegate(UIWindow window);
 
 		void Awake() 
 		{
@@ -23,13 +25,18 @@ namespace game
 			canvas = GetComponent<Canvas>();
 		}
 
-		public void Open(string prefab)
+		public void Open<T>(UIInitDelegate init = null) where T : UIWindow
 		{
+			string prefab = GetPrefab(typeof(T));
 			var ui_prefab = Resources.Load(prefab);
 			var ui_window_go = gameObject.CreateChild(ui_prefab);
 			var window = ui_window_go.GetComponent<UIWindow>();
 			if(window != null)
+			{
 				windows.Add(window);
+				if(init != null)
+					init(window);
+			}
 		}
 
 		public void CloseAll()
@@ -51,11 +58,27 @@ namespace game
 			}
 			return null;
 		}
+
+		static string GetPrefab(System.Type type)
+		{
+			var field = type.GetField("PREFAB");
+			if(field == null)
+			{
+				Debug.LogError("Field 'PREFABS' not found in class " + type.Name);
+				return string.Empty;
+			}
+			object val = field.GetValue(null);
+			string prefab = val as string;
+			if(prefab == null)
+				return string.Empty;
+			return prefab;
+		}
 	}
 
 	public abstract class UIWindow : MonoBehaviour
 	{
 		protected UI root;
+		public static string prefab;
 
 		protected void Awake()
 		{

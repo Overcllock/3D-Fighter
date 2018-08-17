@@ -4,38 +4,35 @@ namespace game
 {
     public class RightEvade : Ability
 	{
-		public RightEvade()
+		const string CONF_PATH = "Assets/src/abilites/rightevade/conf.json";
+
+		public RightEvade(Character inflictor) : base()
 		{
-			anim_state = "Land";
-			is_animlock = true;
-			cooldown_ttl = 6;
-			radius = 3.0f;
-			delay = 0.6f;
-			key = EnumAbilitesKeys.KEY_E;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
 			inflictor.is_invulnerable = true;
 			inflictor.mctl.moving_allowed = false;
 			inflictor.mctl.keep_camera_look_at = true;
 
-			var target = inflictor.FindNearestTarget(radius);
-			inflictor.StartCoroutine(inflictor.Evade(target.transform.position, -Vector3.up, delay / 2));
+			var target = inflictor.FindNearestTarget(conf.radius);
+			inflictor.StartCoroutine(inflictor.Evade(target.transform.position, -Vector3.up, conf.delay / 2));
 		}
 
 		public override void Tick(float dt)
 		{
 			base.Tick(dt);
 			if(inflictor.hud != null)
-				inflictor.hud.UpdateSkillButtonAlpha(key, CheckConditions());
+				inflictor.hud.UpdateSkillButtonAlpha(conf.axis, CheckConditions());
 		}
 
 		public override bool CheckConditions()
 		{
-			return inflictor.HasTargetInRadius(radius);
+			return inflictor.HasTargetInRadius(conf.radius);
 		}
 
 		public override void Defer()

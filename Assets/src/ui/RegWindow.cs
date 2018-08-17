@@ -7,6 +7,8 @@ namespace game
 {
 	public class RegWindow : UIWindow 
 	{
+		public static readonly string PREFAB = "prefabs/SignUp";
+
 		InputField username_input;
 
 		void Start() 
@@ -22,7 +24,9 @@ namespace game
 			string username = username_input.text;
 			if(username == string.Empty)
 			{
-				//TODO: show error popup
+				root.Open<ErrorPopup>((wnd) => { 
+					(wnd as ErrorPopup).SetErrorMessage("Заполните все поля."); 
+				});
 				Debug.LogWarning("Username field is empty.");
 				return;
 			}
@@ -31,7 +35,7 @@ namespace game
 			Main.self.account = account;
 			Account.Save(account);
 			Close();
-			root.Open("prefabs/MainMenu");
+			root.Open<MainWindow>();
 		}
 	}
 }

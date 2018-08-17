@@ -2,23 +2,19 @@ namespace game
 {
     public class Screwkick : Ability
 	{
-		public Screwkick()
+		const string CONF_PATH = "Assets/src/abilites/screwkick/conf.json";
+
+		public Screwkick(Character inflictor) : base()
 		{
-			damage_min = 90.0f;
-			damage_max = 120.0f;
-			radius = 3.5f;
-			cooldown_ttl = 12;
-			key = EnumAbilitesKeys.KEY_2;
-			anim_state = "ScrewKick";
-			delay = 1.05f;
-			is_animlock = true;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()
 		{
 			base.Use();
 			inflictor.mctl.moving_allowed = false;
-			inflictor.TryDamage(radius, damage_min, damage_max, wait_for_distance: true);
+			inflictor.TryDamage(conf.radius, conf.damage_min, conf.damage_max, wait_for_distance: true);
 		}
 
 		public override bool CheckConditions()

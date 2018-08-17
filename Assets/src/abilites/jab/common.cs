@@ -4,22 +4,18 @@ namespace game
 {
     public class Jab : Ability
 	{
-		public Jab()
+		const string CONF_PATH = "Assets/src/abilites/jab/conf.json";
+
+		public Jab(Character inflictor) : base()
 		{
-			damage_min = 10.0f;
-			damage_max = 15.0f;
-			radius = 1.7f;
-			cooldown_ttl = 1.0f;
-			key = EnumAbilitesKeys.KEY_LMB_1;
-			anim_state = "Jab";
-			delay = 0.5f;
-			is_animlock = true;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()
 		{
 			base.Use();
-			inflictor.TryDamage(radius, damage_min, damage_max);
+			inflictor.TryDamage(conf.radius, conf.damage_min, conf.damage_max);
 		}
 
 		public override bool CheckConditions()
