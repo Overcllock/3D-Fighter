@@ -27,8 +27,6 @@ namespace game
 		}
 
 		const float SKILLS_STORING_INTERVAL = 0.8f;
-		const float EVADING_SPEED = 3.1f;
-		const float EVADING_ANGLE = 180.0f;
 
 		public static readonly float MAX_HP = 1500.0f;
 		
@@ -296,18 +294,6 @@ namespace game
 			}
 
 			control = null;
-		}
-
-		public IEnumerator Evade(Vector3 point, Vector3 axis, float delay)
-		{
-			float ttl = 0;
-			do
-			{
-				transform.RotateAround(point, axis, Time.fixedDeltaTime * EVADING_SPEED * EVADING_ANGLE);
-				ttl += Time.fixedDeltaTime;
-				yield return new WaitForFixedUpdate();
-			}
-			while(ttl < delay);
 		}
 
 		public Character FindNearestTarget(float radius = Mathf.Infinity)
