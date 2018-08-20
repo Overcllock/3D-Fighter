@@ -5,7 +5,7 @@ namespace game
 {
     public class RightEvade : Evade
 	{
-		const string CONF_PATH = "Assets/src/abilites/rightevade/conf.json";
+		const string CONF_PATH = "config/abilites/rightevade/conf.json";
 
 		public RightEvade(Character inflictor) : base()
 		{

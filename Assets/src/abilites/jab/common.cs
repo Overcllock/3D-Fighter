@@ -4,7 +4,7 @@ namespace game
 {
     public class Jab : Ability
 	{
-		const string CONF_PATH = "Assets/src/abilites/jab/conf.json";
+		const string CONF_PATH = "config/abilites/jab/conf.json";
 
 		public Jab(Character inflictor) : base()
 		{

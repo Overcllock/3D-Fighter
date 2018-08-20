@@ -2,7 +2,7 @@ namespace game
 {
     public class Screwkick : Ability
 	{
-		const string CONF_PATH = "Assets/src/abilites/screwkick/conf.json";
+		const string CONF_PATH = "config/abilites/screwkick/conf.json";
 
 		public Screwkick(Character inflictor) : base()
 		{

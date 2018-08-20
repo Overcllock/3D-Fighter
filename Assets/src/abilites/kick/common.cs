@@ -2,7 +2,7 @@ namespace game
 {
     public class Kick : Ability
 	{
-		const string CONF_PATH = "Assets/src/abilites/kick/conf.json";
+		const string CONF_PATH = "config/abilites/kick/conf.json";
 
 		UnityEngine.Coroutine wait_coroutine = null;
 
