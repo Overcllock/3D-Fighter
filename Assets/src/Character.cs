@@ -111,10 +111,6 @@ namespace game
 			animator = GetComponent<Animator>();
 			mctl = GetComponent<MovementController>();
 			anim_speed = animator.speed;
-		}
-
-		void Start()
-		{
 			InitCamera();
 			InitAbilites();
 		}

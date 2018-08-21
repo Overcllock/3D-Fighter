@@ -18,10 +18,6 @@ namespace game
 		void Awake() 
 		{
 			windows = new List<UIWindow>();
-		}
-
-		void Start()
-		{
 			canvas = GetComponent<Canvas>();
 		}
 
@@ -64,7 +60,7 @@ namespace game
 			var field = type.GetField("PREFAB");
 			if(field == null)
 			{
-				Debug.LogError("Field 'PREFABS' not found in class " + type.Name);
+				Debug.LogError("Field \"PREFAB\" not found in type " + type.Name);
 				return string.Empty;
 			}
 			object val = field.GetValue(null);

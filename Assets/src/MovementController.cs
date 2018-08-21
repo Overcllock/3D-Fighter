@@ -36,10 +36,6 @@ namespace game
 		{
 			keep_camera_look_at = false;
 			last_input = new Stack<KeyCode>(ALL_KEYS.Length);
-		}
-
-		void Start() 
-		{	
 			cctl = gameObject.GetComponent<CharacterController>();
 			animator = gameObject.GetComponent<Animator>();
 			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
@@ -102,10 +98,10 @@ namespace game
 		}
 
 		void RotateWithAnotherTransform(Transform referenceTransform, float angleOffset = 0.0f)
-        {
-            var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
-        }
+		{
+			var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
+		}
 
 		Vector3 GetDirectory()
 		{
