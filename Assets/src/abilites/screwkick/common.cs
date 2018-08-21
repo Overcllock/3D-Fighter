@@ -13,7 +13,7 @@ namespace game
 		protected override void Use()
 		{
 			base.Use();
-			inflictor.mctl.moving_allowed = false;
+			inflictor.is_freeze = true;
 			inflictor.TryDamage(conf.radius, conf.damage_min, conf.damage_max, wait_for_distance: true);
 		}
 
@@ -24,7 +24,7 @@ namespace game
 
 		public override void Defer()
 		{
-			inflictor.mctl.moving_allowed = true;
+			inflictor.is_freeze = false;
 		}
 	}
 }

@@ -110,6 +110,13 @@ namespace game
 			}
 		}
 
+		public void ShowStartTimer()
+		{
+			var timer = gameObject.GetChild("start_timer");
+			var timer_anim = timer.GetComponent<Animator>();
+			timer_anim.Play("StartTimerAnim", 0);
+		}
+
 		public void ShowDamageInfo(float value, Transform t)
 		{
 			var damage_label_prefab = Resources.Load("prefabs/damage_value");

@@ -14,7 +14,7 @@ namespace game
 		{
 			//TODO:
 			base.Use();
-			inflictor.mctl.moving_allowed = false;
+			inflictor.is_freeze = true;
 		}
 
 		public override bool CheckConditions()
@@ -25,7 +25,7 @@ namespace game
 
 		public override void Defer()
 		{
-			inflictor.mctl.moving_allowed = true;
+			inflictor.is_freeze = false;
 		}
 	}
 }

@@ -14,6 +14,8 @@ namespace game
 		public Account account = null;
 		public UI ui_root;
 		public Character player;
+		[HideInInspector]
+		public Character opponent;
 
 		[HideInInspector]
 		public GameObject bird;
@@ -49,6 +51,11 @@ namespace game
 				if(pause_ui != null)
 					pause_ui.Close();
 			}
+		}
+
+		public void StartGame()
+		{
+			
 		}
 
 		public void ForceQuit()

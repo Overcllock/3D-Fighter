@@ -12,7 +12,7 @@ namespace game
 		{
 			base.Use();
 			inflictor.is_invulnerable = true;
-			inflictor.mctl.moving_allowed = false;
+			inflictor.is_freeze = true;
 			inflictor.mctl.keep_camera_look_at = true;
 		}
 
@@ -31,7 +31,7 @@ namespace game
 		public override void Defer()
 		{
 			inflictor.is_invulnerable = false;
-			inflictor.mctl.moving_allowed = true;
+			inflictor.is_freeze = false;
 			inflictor.mctl.keep_camera_look_at = false;
 		}
 

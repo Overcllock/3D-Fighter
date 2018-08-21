@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: c5a749233d1724533874b5a524483f60
+timeCreated: 1534840347
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 50
+  forceTextureCase: -1
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Supernatural Knight KG
+  fontNames:
+  - Supernatural Knight KG
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 1
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

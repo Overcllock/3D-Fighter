@@ -40,6 +40,16 @@ namespace game
 		public bool is_dummy = false;
 		[HideInInspector]
 		public bool is_invulnerable = false;
+		
+		public bool is_freeze
+		{
+			get { return mctl.moving_allowed && mctl.keep_camera_look_at; }
+			set 
+			{ 
+				mctl.moving_allowed = !value; 
+				mctl.keep_camera_look_at = value;
+			}
+		}
 
 		public bool is_use_ability
 		{
@@ -98,13 +108,13 @@ namespace game
 		void Awake()
 		{
 			abilites_queue = new Queue<Ability>();
+			animator = GetComponent<Animator>();
+			mctl = GetComponent<MovementController>();
+			anim_speed = animator.speed;
 		}
 
 		void Start()
 		{
-			animator = GetComponent<Animator>();
-			mctl = GetComponent<MovementController>();
-			anim_speed = animator.speed;
 			InitCamera();
 			InitAbilites();
 		}
@@ -296,6 +306,17 @@ namespace game
 			control = null;
 		}
 
+		public void ResetCooldowns()
+		{
+			for(int i = 0; i < abilites.Count; ++i)
+			{
+				var ab = abilites[i];
+				ab.cooldown = 0;
+				if(hud != null)
+					hud.UpdateCooldown(ab.conf.axis, ab.cooldown_percent, ab.cooldown);
+			}
+		}
+
 		public Character FindNearestTarget(float radius = Mathf.Infinity)
 		{
 			var ray = new Ray(transform.position, transform.forward);
@@ -424,6 +445,17 @@ namespace game
 			var bird = Main.self.bird;
 			if(bird != null)
 				bird.SetActive(false);
+
+			if(is_player && hud != null)
+			{
+				is_freeze = true;
+				hud.ShowStartTimer();
+				StartCoroutine(Main.WaitAndDo(() => { 
+					is_freeze = false; 
+					abilites_queue.Clear();
+					ResetCooldowns(); 
+				}, 3.0f));
+			}
 		}
 
 		void OnReleased()
