@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,17 +16,6 @@ namespace game
 				o.GetComponent<T>().CrossFadeAlpha(alpha, duration, ignore_time_scale);
 		}
 
-		public static Ability FindByKey(this List<Ability> abs, EnumAbilitesKeys key)
-		{
-			for(int i = 0; i < abs.Count; ++i)
-			{
-				var ab = abs[i];
-				if(ab.key == key)
-					return ab;
-			}
-			return null;
-		}
-
 		public static GameObject GetChild(this GameObject o, string name)
 		{
 			Transform t = o.transform.Find(name);
@@ -32,12 +24,12 @@ namespace game
 			return t.gameObject;
 		}
 
-		public static GameObject CreateChild(this GameObject o, Object prefab)
+		public static GameObject CreateChild(this GameObject o, UnityEngine.Object prefab)
 		{
 			return GameObject.Instantiate(prefab, o.transform) as GameObject;
 		}
 
-		public static GameObject CreateChild(this GameObject o, Object prefab, Vector3 pos, Quaternion rot)
+		public static GameObject CreateChild(this GameObject o, UnityEngine.Object prefab, Vector3 pos, Quaternion rot)
 		{
 			return GameObject.Instantiate(prefab, pos, rot, o.transform) as GameObject;
 		}
@@ -78,36 +70,24 @@ namespace game
 		}
 	}
 
-	public class SkillButtonList
+	public static class JSON
 	{
-		public delegate GameObject ByKey(KeyCode key);
-		public delegate GameObject ByButton(int button);
-
-		ByKey get_by_key;
-		ByButton get_by_button;
-
-		public SkillButtonList(ByKey get_by_key = null, ByButton get_by_button = null)
+		public static T ReadConfig<T>(string path)
 		{
-			this.get_by_key = get_by_key;
-			this.get_by_button = get_by_button;
+			T data = default(T);
+			using (StreamReader reader = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read)))
+			{
+				data = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+			}
+			return data;
 		}
 
-		public GameObject this[EnumAbilitesKeys key]
+		public static void WriteConfig<T>(string path, T obj)
 		{
-			get
+			using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write)))
 			{
-				switch(key)
-				{
-					case EnumAbilitesKeys.NONE:
-						return null;
-					case EnumAbilitesKeys.KEY_LMB_1:
-					case EnumAbilitesKeys.KEY_LMB_2:
-						return get_by_button != null ? get_by_button(0) : null;
-					case EnumAbilitesKeys.KEY_RMB:
-						return get_by_button != null ? get_by_button(1) : null;
-					default:
-						return get_by_key != null ? get_by_key((KeyCode)key) : null;
-				}
+				string data = JsonConvert.SerializeObject(obj, Formatting.Indented);
+				writer.Write(data);
 			}
 		}
 	}

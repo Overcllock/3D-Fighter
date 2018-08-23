@@ -1,26 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace game
 {
+	public struct AbilityConf
+	{
+		public float damage_min;
+		public float damage_max;
+		public float delay;
+		public float before_delay;
+		public float radius;
+		public float cooldown_ttl;
+		public bool is_animlock;
+		public string anim_state;
+		public string axis;
+	}
+
 	public abstract class Ability 
 	{
 		public Character inflictor = null;
-		public EnumAbilitesKeys key = EnumAbilitesKeys.NONE;
-		protected string anim_state = "Idle";
-		protected float radius = 0;
-		public float cooldown = 0;
-		protected float cooldown_ttl = 0;
-		protected float damage_min;
-		protected float damage_max;
-		protected float delay;
-		protected float before_delay;
-		public bool is_animlock = true;
-
+		public AbilityConf conf;
+		public float cooldown;
 		public float cooldown_percent
 		{
-			get { return cooldown_ttl > 0 ? 1 - cooldown / cooldown_ttl : 0; }
+			get { return conf.cooldown_ttl > 0 ? 1 - cooldown / conf.cooldown_ttl : 0; }
 		}
 		public bool is_available
 		{
@@ -28,9 +33,9 @@ namespace game
 			{ 
 				if(inflictor != null)
 				{
-					if(is_animlock && inflictor.is_use_ability)
+					if(conf.is_animlock && inflictor.is_use_ability)
 						return false;
-					if(!is_animlock && inflictor.active_ability == this)
+					if(!conf.is_animlock && inflictor.active_ability == this)
 						return false;
 				}
 				return cooldown == 0 && CheckConditions(); 
@@ -39,12 +44,12 @@ namespace game
 
 		public abstract bool CheckConditions();
 		public virtual void Defer() { }
-		public void SetCooldown() { cooldown = cooldown_ttl; }
+		public void SetCooldown() { cooldown = conf.cooldown_ttl; }
 
 		protected virtual void Use()
 		{
 			inflictor.active_ability = this;
-			inflictor.PlayAnim(anim_state, delay);
+			inflictor.PlayAnim(conf.anim_state, conf.delay);
 			SetCooldown();
 		}
 
@@ -69,30 +74,15 @@ namespace game
 			return true;
 		}
 
-		public static Ability GetByKey(EnumAbilitesKeys key)
+		protected void ReadConf(string conf_path)
 		{
-			switch(key)
+			try
 			{
-				case EnumAbilitesKeys.KEY_1:
-					return new Dodge();
-				case EnumAbilitesKeys.KEY_2:
-					return new Screwkick();
-				case EnumAbilitesKeys.KEY_LMB_1:
-					return new Jab();
-				case EnumAbilitesKeys.KEY_LMB_2:
-					return new Kick();
-				case EnumAbilitesKeys.KEY_RMB:
-					return new Spinkick();
-				case EnumAbilitesKeys.KEY_F:
-					return new Headspring();
-				case EnumAbilitesKeys.KEY_TAB:
-					return new Escape();
-				case EnumAbilitesKeys.KEY_E:
-					return new RightEvade();
-				case EnumAbilitesKeys.KEY_Q:
-					return new LeftEvade();
-				default:
-					return null;
+				conf = JSON.ReadConfig<AbilityConf>(conf_path);
+			}
+			catch(Exception ex)
+			{
+				Debug.LogError("Can't read ability config. " + ex.Message);
 			}
 		}
 	}

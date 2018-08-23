@@ -1,0 +1,11 @@
+{
+    "damage_min"    : 10.0,
+    "damage_max"    : 15.0,
+    "delay"         : 0.5,
+    "before_delay"  : 0.0,
+    "radius"        : 1.7,
+    "cooldown_ttl"  : 1.0,
+    "is_animlock"   : 1,
+    "anim_state"    : "Jab",
+    "axis"          : "LMB"
+}

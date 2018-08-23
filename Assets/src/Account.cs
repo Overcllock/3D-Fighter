@@ -64,23 +64,18 @@ namespace game {
 				if(!Directory.Exists("userdata"))
 					Directory.CreateDirectory("userdata");
 
-				Account account;
-				using (StreamReader reader = new StreamReader(new FileStream(SAVEFILE_PATH, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
-				{
-					account = JsonConvert.DeserializeObject<Account>(reader.ReadToEnd());
-				}
-
+				var account = JSON.ReadConfig<Account>(SAVEFILE_PATH);
 				if(account != null)
 				{
 					Debug.Log("Account loaded successfully.");
 					return account;
 				}
 
-				throw new Exception("user data is null or empty.");
+				throw new Exception("User data is null or empty.");
 			}
 			catch (Exception ex)
 			{
-				Debug.LogError("Account not loaded: " + ex.Message);
+				Debug.LogError("Account not loaded. " + ex.Message);
 				return new Account();
 			}
 		}
@@ -92,16 +87,12 @@ namespace game {
 				if(!Directory.Exists("userdata"))
 					Directory.CreateDirectory("userdata");
 
-				using (StreamWriter writer = new StreamWriter(new FileStream(SAVEFILE_PATH, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
-				{
-					var json_str = JsonConvert.SerializeObject(account, Formatting.Indented);
-					writer.Write(json_str);
-				}
+				JSON.WriteConfig(SAVEFILE_PATH, account);
 				Debug.Log("Account saved successfully.");
 			}
 			catch (Exception ex)
 			{
-				Debug.LogError("Account not saved: " + ex.Message);
+				Debug.LogError("Account not saved. " + ex.Message);
 			}
 		}
 	}

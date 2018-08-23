@@ -1,0 +1,11 @@
+{
+    "damage_min"    : 60.0,
+    "damage_max"    : 85.0,
+    "delay"         : 0.55,
+    "before_delay"  : 0.0,
+    "radius"        : 2.0,
+    "cooldown_ttl"  : 6.0,
+    "is_animlock"   : 1,
+    "anim_state"    : "Spinkick",
+    "axis"          : "RMB"
+}

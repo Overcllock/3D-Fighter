@@ -1,0 +1,11 @@
+{
+    "damage_min"    : 90.0,
+    "damage_max"    : 120.0,
+    "delay"         : 1.05,
+    "before_delay"  : 0.0,
+    "radius"        : 3.5,
+    "cooldown_ttl"  : 12.0,
+    "is_animlock"   : 1,
+    "anim_state"    : "ScrewKick",
+    "axis"          : "Alpha2"
+}

@@ -2,13 +2,12 @@ namespace game
 {
     public class Dodge : Ability
 	{
-		public Dodge()
+		const string CONF_PATH = "Assets/src/abilites/dodge/conf.json";
+
+		public Dodge(Character inflictor) : base()
 		{
-			cooldown_ttl = 6;
-			key = EnumAbilitesKeys.KEY_1;
-			anim_state = "Land";
-			delay = 0.75f;
-			is_animlock = true;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()

@@ -2,10 +2,12 @@ namespace game
 {
     public class Headspring : Ability
 	{
-		public Headspring()
+		const string CONF_PATH = "Assets/src/abilites/headspring/conf.json";
+
+		public Headspring(Character inflictor) : base()
 		{
-			cooldown_ttl = 12;
-			key = EnumAbilitesKeys.KEY_F;
+			this.inflictor = inflictor;
+			ReadConf(CONF_PATH);
 		}
 
 		protected override void Use()

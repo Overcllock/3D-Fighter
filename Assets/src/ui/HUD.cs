@@ -7,21 +7,21 @@ namespace game
 {
 	public class HUD : UIWindow 
 	{
+		public static readonly string PREFAB = "prefabs/HUD";
+
 		const float HPBAR_SPEED = 3.0f;
 
 		class SkillButton
 		{
 			public GameObject go;
-			public EnumAbilitesKeys key;
+			public string axis;
 
-			public SkillButton(GameObject go, EnumAbilitesKeys key)
+			public SkillButton(GameObject go, string axis)
 			{
 				this.go = go;
-				this.key = key;
+				this.axis = axis;
 			}
 		}
-
-		SkillButtonList skill_list;
 		List<SkillButton> skill_buttons;
 
 		Image crosshair;
@@ -29,7 +29,6 @@ namespace game
 		new protected void Awake()
 		{
 			base.Awake();
-			skill_list = new SkillButtonList(GetSkillByKey, GetSkillByMouseButton);
 			skill_buttons = new List<SkillButton>();
 			Main.self.player.hud = this;
 		}
@@ -39,7 +38,7 @@ namespace game
 			crosshair = gameObject.GetChild("crosshair").GetComponent<Image>();
 
 			Fill();
-			InitSkillButtons();
+			StartCoroutine(InitSkillButtons());
 		}
 
 		void Fill()
@@ -49,14 +48,24 @@ namespace game
 			nick_txt.text = Main.self.account.name;
 		}
 
-		void InitSkillButtons()
+		IEnumerator InitSkillButtons()
 		{
-			for(int i = 0; i < Main.self.all_abilites_keys.Length; ++i)
+			yield return new WaitWhile(() => 
 			{
-				var ab_key = Main.self.all_abilites_keys[i];
-				var skill_go = skill_list[ab_key];
+				return Main.self.player.abilites == null || Main.self.player.abilites.Count == 0;
+			});
+
+			for(int i = 0; i < Main.self.player.abilites.Count; ++i)
+			{
+				var ability = Main.self.player.abilites[i];
+
+				//temporarily
+				if(ability.conf.axis == "LMB2")
+					continue;
+
+				var skill_go = GetSkillByAxis(ability.conf.axis);
 				if(skill_go != null)
-					skill_buttons.Add(new SkillButton(skill_go, ab_key));
+					skill_buttons.Add(new SkillButton(skill_go, ability.conf.axis));
 			}
 		}
 
@@ -68,13 +77,13 @@ namespace game
 
 		public void SetEnemyBarVisibility(bool visibility)
 		{
-			gameObject.GetChild("enemy_hp").SetActive(visibility);
+			gameObject.GetChild("enemy_bar").SetActive(visibility);
 		}
 
 		public void UpdateEnemyBar(Character enemy)
 		{
-			var hpbar = gameObject.GetChild("enemy_hp").GetChild("hpbar").GetComponent<Slider>();
-			var hptxt = gameObject.GetChild("enemy_hp").GetChild("txt").GetComponent<Text>();
+			var hpbar = gameObject.GetChild("enemy_bar").GetChild("hpbar").GetComponent<Slider>();
+			var hptxt = gameObject.GetChild("enemy_bar").GetChild("txt").GetComponent<Text>();
 			if(!hpbar || !hptxt)
 				return;
 			
@@ -82,9 +91,9 @@ namespace game
 			hpbar.value = Mathf.Lerp(hpbar.value, enemy.HP, Time.fixedDeltaTime * HPBAR_SPEED);
 		}
 
-		public void PushSkill(EnumAbilitesKeys key, bool is_push)
+		public void PushSkill(string axis, bool is_push)
 		{
-			var skill = GetSkillFromList(key);
+			var skill = GetSkillFromList(axis);
 			if(skill == null)
 				return;
 
@@ -173,9 +182,9 @@ namespace game
 			return ui_pos;
 		}
 
-		public void UpdateSkillButtonAlpha(EnumAbilitesKeys key, bool is_available)
+		public void UpdateSkillButtonAlpha(string axis, bool is_available)
 		{
-			var skill = GetSkillFromList(key);
+			var skill = GetSkillFromList(axis);
 			if(skill == null)
 				return;
 
@@ -186,12 +195,9 @@ namespace game
 			cooldown_ttl.CrossFadeAlpha<Text>(is_available ? 1 : 0, 0.1f, false);
 		}
 
-		public void UpdateCooldown(EnumAbilitesKeys key, float percent, float value)
+		public void UpdateCooldown(string axis, float percent, float value)
 		{
-			if(key == EnumAbilitesKeys.KEY_LMB_2)
-				return;
-
-			var skill_go = GetSkillFromList(key);
+			var skill_go = GetSkillFromList(axis);
 			if(skill_go != null)
 			{
 				var cooldown = skill_go.GetChild("cooldown");
@@ -203,26 +209,22 @@ namespace game
 			}
 		}
 
-		GameObject GetSkillFromList(EnumAbilitesKeys key)
+		GameObject GetSkillFromList(string axis)
 		{
 			for(int i = 0; i < skill_buttons.Count; ++i)
 			{
 				var skill_btn = skill_buttons[i];
-				if(skill_btn.key == key)
+				if(skill_btn.axis == axis)
 					return skill_btn.go;
 			}
 			return null;
 		}
 
-		GameObject GetSkillByKey(KeyCode key)
+		GameObject GetSkillByAxis(string axis)
 		{
-			return transform.FindRecursive("but_" + key.ToString()).gameObject;
-		}
-
-		GameObject GetSkillByMouseButton(int button)
-		{
-			string path = button == 0 ? "but_LMB" : "but_RMB";
-			return transform.FindRecursive(path).gameObject;
+			if(axis.Length == 0)
+				return null;
+			return transform.FindRecursive("but_" + axis).gameObject;
 		}
 	}
 }
