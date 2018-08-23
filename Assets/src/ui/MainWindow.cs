@@ -35,9 +35,9 @@ namespace game
 			var rank_info_anim = GetUIComponent<Image>("rank_anim");
 
 			rank_info.text = "Ранг: " + acc.rate;
-			victory_info.text = "Побед: " + acc.wins;
-			defeat_info.text = "Поражений: " + acc.loses;
-			rate_info.text = "Рейтинг побед: " + acc.winrate + '%';
+			victory_info.text = acc.wins.ToString();
+			defeat_info.text = acc.loses.ToString();
+			rate_info.text = acc.winrate.ToString() + '%';
 
 			var conf_data = JSON.ReadConfig<Dictionary<EnumLeague, string[]>>("config/league_sprites.json");
 			league_info.sprite = Resources.Load<Sprite>(conf_data[acc.league][0]);
