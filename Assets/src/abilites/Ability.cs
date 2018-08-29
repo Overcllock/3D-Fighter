@@ -50,7 +50,7 @@ namespace game
 		protected virtual void Use()
 		{
 			inflictor.active_ability = this;
-			inflictor.animator.PlayAnim(conf.anim_state, conf.delay);
+			inflictor.actl.PlayAnim(conf.anim_state, conf.delay);
 			SetCooldown();
 		}
 

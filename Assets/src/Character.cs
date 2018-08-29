@@ -76,9 +76,7 @@ namespace game
 			}
 		}
 
-		public CharacterAnimator animator;
 		Control control = null;
-
 		vThirdPersonCamera cam;
 		Coroutine process_control = null;
 
@@ -86,6 +84,8 @@ namespace game
 		public Character target = null;
 		[HideInInspector]
 		public MovementController mctl = null;
+		[HideInInspector]
+		public AnimationController actl;
 		[HideInInspector]
 		public HUD hud = null;
 
@@ -110,7 +110,7 @@ namespace game
 			abilites_queue = new Queue<Ability>();
 			abilites = new List<Ability>();
 			mctl = GetComponent<MovementController>();
-			animator = new CharacterAnimator(GetComponent<Animator>(), this);
+			actl = new AnimationController(GetComponent<Animator>(), this);
 
 			InitCamera();
 			InitAbilites();
@@ -433,7 +433,7 @@ namespace game
 		}
 	}
 
-	public class CharacterAnimator
+	public class AnimationController
 	{
 		Coroutine aab_defer_routine = null;
 
@@ -441,7 +441,7 @@ namespace game
 		Character character = null;
 		float anim_speed;
 
-		public CharacterAnimator(Animator animator, Character character)
+		public AnimationController(Animator animator, Character character)
 		{
 			this.animator = animator;
 			this.character = character;
