@@ -23,8 +23,6 @@ namespace game
 		float current_speed;
 		float speed_smooth_velocity;
 
-		float offset;
-
 		void Awake()
 		{
 			keep_camera_look_at = false;
@@ -60,6 +58,7 @@ namespace game
 			var velocity = Vector3.ClampMagnitude(transform.forward * current_speed, target_speed);
 			cctl.Move(velocity * Time.fixedDeltaTime);
 
+			float offset = 0;
 			if(input.y != 0 && input.x != 0)
 			{
 				offset = Mathf.Clamp(input.y * 180.0f, -180.0f, 0);
