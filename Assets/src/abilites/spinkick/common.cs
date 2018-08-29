@@ -26,10 +26,10 @@ namespace game
 					duration: 2.0f,
 					vfx: "stun",
 					OnStart: new UnityAction(() => {
-						damaged.FreezeAnim();
+						damaged.animator.FreezeAnim();
 					}),
 					OnFinish: new UnityAction(() => {
-						damaged.UnfreezeAnim();
+						damaged.animator.UnfreezeAnim();
 					})
 				));
 			}

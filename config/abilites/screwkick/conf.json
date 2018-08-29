@@ -1,4 +1,5 @@
 {
+    "name"          : "Screwkick",
     "damage_min"    : 90.0,
     "damage_max"    : 120.0,
     "delay"         : 1.05,

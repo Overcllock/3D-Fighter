@@ -5,14 +5,11 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 
-namespace game {
+namespace game 
+{
 	public class Account 
 	{
 		public static readonly string SAVEFILE_PATH = "userdata/account.json";
-		public static readonly uint BRONZE_RATE = 1300;
-		public static readonly uint SILVER_RATE = 1350;
-		public static readonly uint GOLD_RATE = 1600;
-		public static readonly uint PLATINUM_RATE = 1900;
 
 		public string name;
 		public uint rate;
@@ -33,9 +30,9 @@ namespace game {
 		{
 			get
 			{
-				if(rate < SILVER_RATE) return EnumLeague.BRONZE;
-				if(rate < GOLD_RATE) return EnumLeague.SILVER;
-				if(rate < PLATINUM_RATE) return EnumLeague.GOLD;
+				if(rate < Matching.MinLeagueRate.Silver) return EnumLeague.BRONZE;
+				if(rate < Matching.MinLeagueRate.Gold) return EnumLeague.SILVER;
+				if(rate < Matching.MinLeagueRate.Platinum) return EnumLeague.GOLD;
 				else return EnumLeague.PLATINUM;
 			}
 		}
@@ -48,13 +45,13 @@ namespace game {
 		public Account()
 		{
 			name = string.Empty;
-			rate = BRONZE_RATE;
+			rate = Matching.MinLeagueRate.Bronze;
 		}
 
 		public Account(string name)
 		{
 			this.name = name;
-			rate = BRONZE_RATE;
+			rate = Matching.MinLeagueRate.Bronze;
 		}
 
 		public static Account Load()

@@ -7,6 +7,7 @@ namespace game
 {
 	public struct AbilityConf
 	{
+		public string name;
 		public float damage_min;
 		public float damage_max;
 		public float delay;
@@ -49,7 +50,7 @@ namespace game
 		protected virtual void Use()
 		{
 			inflictor.active_ability = this;
-			inflictor.PlayAnim(conf.anim_state, conf.delay);
+			inflictor.animator.PlayAnim(conf.anim_state, conf.delay);
 			SetCooldown();
 		}
 
@@ -84,6 +85,17 @@ namespace game
 			{
 				Debug.LogError("Can't read ability config. " + ex.Message);
 			}
+		}
+
+		public static object GetFromConf(AbilityConf conf, object[] constructor_params)
+		{
+			Type type = Type.GetType("game." + conf.name);
+			if(type != null)
+			{
+				var instance = Activator.CreateInstance(type, constructor_params);
+				return instance;
+			}
+			return null;
 		}
 	}
 }

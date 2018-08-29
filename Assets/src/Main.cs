@@ -53,11 +53,6 @@ namespace game
 			}
 		}
 
-		public void StartGame()
-		{
-			
-		}
-
 		public void ForceQuit()
 		{
 			Application.Quit();
@@ -77,11 +72,12 @@ namespace game
 
 		IEnumerator AutoSave(bool repeat = true)
 		{
+			var vfsr = new WaitForSecondsRealtime(AUTOSAVE_INTERVAL);
 			do
 			{
 				if(account != null && account.IsValid)
 					Account.Save(account);
-				yield return new WaitForSecondsRealtime(AUTOSAVE_INTERVAL);
+				yield return vfsr;
 			}
 			while(repeat);
 		}

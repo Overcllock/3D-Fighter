@@ -54,24 +54,34 @@ namespace game
 
 			return null;
 		}
-
-		public static float ToOffset(this Vector3 vec, Transform t)
-		{
-			float offset = 0.0f;
-			
-			if(vec == -t.forward)
-				offset = 180.0f;
-			else if(vec == t.right)
-				offset = 90.0f;
-			else if(vec == -t.right)
-				offset = -90.0f;
-
-			return offset;
-		}
 	}
 
 	public static class JSON
 	{
+		public static List<T> ReadDirectory<T>(string dir_path)
+		{
+			var files = Directory.GetFiles(dir_path, "*.json", SearchOption.AllDirectories);
+			var objects = new List<T>();
+			for(int i = 0; i < files.Length; ++i)
+			{
+				var filepath = files[i];
+				T obj = default(T);
+
+				try 
+				{
+					obj = JSON.ReadConfig<T>(filepath);
+				}
+				catch (Exception ex)
+				{
+					Debug.LogError(ex.Message);
+				}
+				
+				if(obj != null)
+					objects.Add(obj);
+			}
+			return objects;
+		}
+
 		public static T ReadConfig<T>(string path)
 		{
 			T data = default(T);

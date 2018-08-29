@@ -30,7 +30,7 @@ namespace game
 
 		public static readonly float MAX_HP = 1500.0f;
 		
-		float queue_duration = 0;
+		float ab_queue_duration = 0;
 
 		[HideInInspector]
 		public bool is_moving = false;
@@ -76,12 +76,12 @@ namespace game
 			}
 		}
 
-		vThirdPersonCamera cam;
-		Animator animator = null;
-		float anim_speed;
-		Coroutine aab_defer_routine = null;
-		Coroutine process_control = null;
+		public CharacterAnimator animator;
 		Control control = null;
+
+		vThirdPersonCamera cam;
+		Coroutine process_control = null;
+
 		[HideInInspector]
 		public Character target = null;
 		[HideInInspector]
@@ -108,9 +108,10 @@ namespace game
 		void Awake()
 		{
 			abilites_queue = new Queue<Ability>();
-			animator = GetComponent<Animator>();
+			abilites = new List<Ability>();
 			mctl = GetComponent<MovementController>();
-			anim_speed = animator.speed;
+			animator = new CharacterAnimator(GetComponent<Animator>(), this);
+
 			InitCamera();
 			InitAbilites();
 		}
@@ -134,19 +135,14 @@ namespace game
 
 		void InitAbilites()
 		{
-			abilites = new List<Ability>()
+			var confs = JSON.ReadDirectory<AbilityConf>(@"config/abilites");
+			for(int i = 0; i < confs.Count; ++i)
 			{
-				new Jab(this),
-				new Kick(this),
-				new Counter(this),
-				new Dodge(this),
-				new Escape(this),
-				new Headspring(this),
-				new LeftEvade(this),
-				new RightEvade(this),
-				new Spinkick(this),
-				new Screwkick(this)
-			};
+				var conf = confs[i];
+				var ability = Ability.GetFromConf(conf, new object[] { this }) as Ability;
+				if(ability != null)
+					abilites.Add(ability);
+			}
 		}
 
 		void TickAbilites()
@@ -158,6 +154,29 @@ namespace game
 				if(hud != null)
 					hud.UpdateCooldown(ab.conf.axis, ab.cooldown_percent, ab.cooldown);
 			}
+		}
+
+		void UpdateAbilitesQueue()
+		{
+			if(abilites_queue.Count == 0)
+			{
+				ab_queue_duration = 0;
+				return;
+			}
+
+			ab_queue_duration += Time.fixedDeltaTime;
+			if(ab_queue_duration >= SKILLS_STORING_INTERVAL)
+			{
+				abilites_queue.Dequeue();
+				ab_queue_duration = 0;
+				if(abilites_queue.Count == 0)
+					return;
+			}
+
+			var skill = abilites_queue.Dequeue();
+			if(!skill.TryUseAbility())
+				if(!abilites_queue.Contains(skill))
+					abilites_queue.Enqueue(skill);
 		}
 
 		void UpdateTarget()
@@ -199,120 +218,6 @@ namespace game
 			}
 		}
 
-		void UpdateAbilitesQueue()
-		{
-			if(abilites_queue.Count == 0)
-			{
-				queue_duration = 0;
-				return;
-			}
-
-			queue_duration += Time.fixedDeltaTime;
-			if(queue_duration >= SKILLS_STORING_INTERVAL)
-			{
-				abilites_queue.Dequeue();
-				queue_duration = 0;
-				if(abilites_queue.Count == 0)
-					return;
-			}
-
-			var skill = abilites_queue.Dequeue();
-			if(!skill.TryUseAbility())
-				if(!abilites_queue.Contains(skill))
-					abilites_queue.Enqueue(skill);
-		}
-
-		void ProcessInput()
-		{
-			//Pause
-			if(Input.GetButtonDown("Cancel"))
-			{
-				Main.self.SetPause(!Main.self.is_paused);
-				cam.SetCursorVisibility(Main.self.is_paused);
-			}
-
-			for(int i = 0; i < abilites.Count; ++i)
-			{
-				var ability = abilites[i];
-				bool is_held = ability.conf.axis.Length > 0 && Input.GetAxis(ability.conf.axis) > 0;
-				if(is_held)
-				{
-					if(!ability.TryUseAbility() && !abilites_queue.Contains(ability))
-						abilites_queue.Enqueue(ability);
-				}
-				if(hud != null)
-					hud.PushSkill(ability.conf.axis, is_held);
-			}
-		}
-
-		public void FreezeAnim()
-		{
-			anim_speed = animator.speed;
-			animator.speed = 0f;
-		}
-
-		public void UnfreezeAnim()
-		{
-			animator.speed = anim_speed;
-		}
-
-		public bool HasTargetInRadius(float radius)
-		{
-			return FindNearestTarget(radius) != null;
-		}
-
-		public void SetControl(Control control)
-		{
-			if(process_control != null)
-			{
-				StopCoroutine(process_control);
-				process_control = null;
-			}
-
-			if(has_control)
-				ResetControl();
-
-			if(control.vfx != string.Empty)
-				ShowVFX(control.vfx);
-			
-			if(control.OnStart != null)
-				control.OnStart();
-
-			this.control = control;
-			process_control = Main.self.StartCoroutine(Main.WaitAndDo(ResetControl, control.duration));
-		}
-
-		public void ResetControl()
-		{
-			if(control == null)
-				return;
-
-			if(control.vfx != string.Empty)
-				HideVFX(control.vfx);
-
-			if(control.OnFinish != null)
-				control.OnFinish();
-
-			if(process_control != null)
-			{
-				Main.self.StopCoroutine(process_control);
-				process_control = null;
-			}
-
-			control = null;
-		}
-
-		public void ResetCooldowns()
-		{
-			for(int i = 0; i < abilites.Count; ++i)
-			{
-				var ab = abilites[i];
-				ab.cooldown = 0;
-				if(hud != null)
-					hud.UpdateCooldown(ab.conf.axis, ab.cooldown_percent, ab.cooldown);
-			}
-		}
-
 		public Character FindNearestTarget(float radius = Mathf.Infinity)
 		{
 			var ray = new Ray(transform.position, transform.forward);
@@ -340,6 +245,86 @@ namespace game
 			}
 
 			return nearest_target;
+		}
+
+		public bool HasTargetInRadius(float radius)
+		{
+			return FindNearestTarget(radius) != null;
+		}
+
+		void ProcessInput()
+		{
+			//Pause
+			if(Input.GetButtonDown("Cancel"))
+			{
+				Main.self.SetPause(!Main.self.is_paused);
+				cam.SetCursorVisibility(Main.self.is_paused);
+			}
+
+			for(int i = 0; i < abilites.Count; ++i)
+			{
+				var ability = abilites[i];
+				bool is_held = ability.conf.axis.Length > 0 && Input.GetAxis(ability.conf.axis) > 0;
+				if(is_held)
+				{
+					if(!ability.TryUseAbility() && !abilites_queue.Contains(ability))
+						abilites_queue.Enqueue(ability);
+				}
+				if(hud != null)
+					hud.PushSkill(ability.conf.axis, is_held);
+			}
+		}
+
+		public void SetControl(Control control)
+		{
+			if(process_control != null)
+			{
+				StopCoroutine(process_control);
+				process_control = null;
+			}
+
+			if(has_control)
+				ResetControl();
+
+			if(control.vfx != string.Empty)
+				ShowVFX(control.vfx, true);
+			
+			if(control.OnStart != null)
+				control.OnStart();
+
+			this.control = control;
+			process_control = Main.self.StartCoroutine(Main.WaitAndDo(ResetControl, control.duration));
+		}
+
+		public void ResetControl()
+		{
+			if(control == null)
+				return;
+
+			if(control.vfx != string.Empty)
+				ShowVFX(control.vfx, false);
+
+			if(control.OnFinish != null)
+				control.OnFinish();
+
+			if(process_control != null)
+			{
+				Main.self.StopCoroutine(process_control);
+				process_control = null;
+			}
+
+			control = null;
+		}
+
+		public void ResetCooldowns()
+		{
+			for(int i = 0; i < abilites.Count; ++i)
+			{
+				var ab = abilites[i];
+				ab.cooldown = 0;
+				if(hud != null)
+					hud.UpdateCooldown(ab.conf.axis, ab.cooldown_percent, ab.cooldown);
+			}
 		}
 
 		public Character TryDamage(float radius, float min, float max, bool wait_for_distance = false)
@@ -386,40 +371,16 @@ namespace game
 			OnReleased();
 		}
 
-		public void ShowVFX(string name)
+		public void ShowVFX(string name, bool show)
 		{
 			var vfx = gameObject.GetChild(name).GetComponent<ParticleSystem>();
 			if(vfx != null)
-				vfx.Play();
-		}
-
-		public void HideVFX(string name)
-		{
-			var vfx = gameObject.GetChild(name).GetComponent<ParticleSystem>();
-			if(vfx != null)
-				vfx.Stop();
-		}
-
-		public void PlayAnim(string statename, float delay)
-		{
-			if(aab_defer_routine != null)
 			{
-				StopCoroutine(aab_defer_routine);
-				aab_defer_routine = null;
+				if(show)
+					vfx.Play();
+				else
+					vfx.Stop();
 			}
-			animator.Play(statename, 0);
-			aab_defer_routine = StartCoroutine(AnimDefer(delay));
-		}
-
-		IEnumerator AnimDefer(float delay = 0.0f)
-		{
-			yield return new WaitForSecondsRealtime(delay);
-			if(active_ability != null)
-			{
-				active_ability.Defer();
-				active_ability = null;
-			}
-			aab_defer_routine = null;
 		}
 
 		void OnDie()
@@ -469,6 +430,55 @@ namespace game
 				cam.lockCamera = true;
 				cam.cutsceneMode = true;
 			}
+		}
+	}
+
+	public class CharacterAnimator
+	{
+		Coroutine aab_defer_routine = null;
+
+		Animator animator = null;
+		Character character = null;
+		float anim_speed;
+
+		public CharacterAnimator(Animator animator, Character character)
+		{
+			this.animator = animator;
+			this.character = character;
+			anim_speed = animator.speed;
+		}
+
+		public void FreezeAnim()
+		{
+			anim_speed = animator.speed;
+			animator.speed = 0f;
+		}
+
+		public void UnfreezeAnim()
+		{
+			animator.speed = anim_speed;
+		}
+
+		public void PlayAnim(string statename, float delay)
+		{
+			if(aab_defer_routine != null)
+			{
+				character.StopCoroutine(aab_defer_routine);
+				aab_defer_routine = null;
+			}
+			animator.Play(statename, 0);
+			aab_defer_routine = character.StartCoroutine(AnimDefer(delay));
+		}
+
+		IEnumerator AnimDefer(float delay = 0.0f)
+		{
+			yield return new WaitForSecondsRealtime(delay);
+			if(character.active_ability != null)
+			{
+				character.active_ability.Defer();
+				character.active_ability = null;
+			}
+			aab_defer_routine = null;
 		}
 	}
 }

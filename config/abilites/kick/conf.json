@@ -1,4 +1,5 @@
 {
+    "name"          : "Kick",
     "damage_min"    : 20.0,
     "damage_max"    : 30.0,
     "delay"         : 0.45,

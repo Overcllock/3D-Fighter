@@ -21,7 +21,7 @@ namespace game
 
 		void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.Escape) && window_loaded)
+			if(Input.GetButtonDown("Cancel") && window_loaded)
 				OnContinue();
 		}
 

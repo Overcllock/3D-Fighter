@@ -12,15 +12,6 @@ namespace game
 		const float SPEED_SMOOTH_TIME = 0.1f;
 		const float STRAFE_ROTATION_SPEED = 10f;
 
-		//TODO: move to input settings
-		KeyCode[] ALL_KEYS = new KeyCode[] {
-			KeyCode.W,
-			KeyCode.A,
-			KeyCode.S,
-			KeyCode.D
-		};
-		Stack<KeyCode> last_input;
-
 		CharacterController cctl;
 		Animator animator;
 		vThirdPersonCamera cam;
@@ -32,26 +23,14 @@ namespace game
 		float current_speed;
 		float speed_smooth_velocity;
 
+		float offset;
+
 		void Awake()
 		{
 			keep_camera_look_at = false;
-			last_input = new Stack<KeyCode>(ALL_KEYS.Length);
 			cctl = gameObject.GetComponent<CharacterController>();
 			animator = gameObject.GetComponent<Animator>();
 			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
-		}
-
-		void Update()
-		{
-			if(last_input.Count > 0)
-			{
-				if(!Input.GetKey(last_input.Peek()))
-					last_input.Pop();
-			}
-
-			var last_input_key = GetLastInput();
-			if(last_input_key != KeyCode.Break)
-				last_input.Push(last_input_key);
 		}
 		
 		void FixedUpdate() 
@@ -81,66 +60,34 @@ namespace game
 			var velocity = Vector3.ClampMagnitude(transform.forward * current_speed, target_speed);
 			cctl.Move(velocity * Time.fixedDeltaTime);
 
+			if(input.y != 0 && input.x != 0)
+			{
+				offset = Mathf.Clamp(input.y * 180.0f, -180.0f, 0);
+				float x_offset = input.x * 45.0f;
+				offset += offset < 0 ? -x_offset : x_offset;
+			}
+			else if(input.y != 0)
+				offset = Mathf.Clamp(input.y * 180.0f, -180.0f, 0);
+			else if(input.x != 0)
+				offset = input.x * 90.0f;
+			
+			RotateWithAnotherTransform(cam.transform, offset);
+
 			current_speed = new Vector2(cctl.velocity.x, cctl.velocity.z).magnitude;
 		}
 
 		void MoveCamera(Vector2 mouse_input, bool follow_character_transform = false)
 		{
-			var directory = GetDirectory();
-
 			if(follow_character_transform)
 				cam.AutoRotateCamera(x: true, y: false);
 			else
 				cam.RotateCamera(mouse_input.x, mouse_input.y);
-
-			if(moving_allowed)
-				RotateWithAnotherTransform(cam.transform, directory.ToOffset(transform));
 		}
 
 		void RotateWithAnotherTransform(Transform referenceTransform, float angleOffset = 0.0f)
 		{
 			var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
 			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
-		}
-
-		Vector3 GetDirectory()
-		{
-			if(last_input.Count == 0) 
-				return Vector3.zero;
-
-			var directory = Vector3.zero;
-			switch(last_input.Peek())
-			{
-				case KeyCode.W:
-					directory = transform.forward;
-					break;
-				case KeyCode.S:
-					directory = -transform.forward;
-					break;
-				case KeyCode.A:
-					directory = -transform.right;
-					break;
-				case KeyCode.D:
-					directory = transform.right;
-					break;
-			}
-
-			return directory;
-		}
-
-		KeyCode GetLastInput()
-		{
-			KeyCode input = KeyCode.Break;
-			for(int i = 0; i < ALL_KEYS.Length; ++i)
-			{
-				var key = ALL_KEYS[i];
-				if(Input.GetKeyDown(key))
-				{
-					input = key;
-					break;
-				}
-			}
-			return input;
 		}
 	}
 }

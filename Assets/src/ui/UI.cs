@@ -74,7 +74,6 @@ namespace game
 	public abstract class UIWindow : MonoBehaviour
 	{
 		protected UI root;
-		public static string prefab;
 
 		protected void Awake()
 		{
