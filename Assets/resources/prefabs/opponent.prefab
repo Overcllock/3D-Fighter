@@ -1264,6 +1264,7 @@ GameObject:
   - component: {fileID: 143214241089897372}
   - component: {fileID: 136402097129145548}
   - component: {fileID: 114309262914588596}
+  - component: {fileID: 114496716681593862}
   m_Layer: 0
   m_Name: opponent
   m_TagString: Untagged
@@ -5223,10 +5224,23 @@ MonoBehaviour:
   is_player: 0
   is_dummy: 1
   is_invulnerable: 0
-  control: 0
   target: {fileID: 0}
   mctl: {fileID: 0}
   hud: {fileID: 0}
+--- !u!114 &114496716681593862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1487041598278794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 933b3d201769f4c6eb04ec20efe7ee50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 4
+  moving_allowed: 1
+  keep_camera_look_at: 0
 --- !u!136 &136402097129145548
 CapsuleCollider:
   m_ObjectHideFlags: 1

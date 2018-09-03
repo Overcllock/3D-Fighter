@@ -83,10 +83,13 @@ namespace game
 				cam.RotateCamera(mouse_input.x, mouse_input.y);
 		}
 
-		void RotateWithAnotherTransform(Transform referenceTransform, float angleOffset = 0.0f)
+		public void RotateWithAnotherTransform(Transform reference_transform, float angleOffset = 0.0f, bool interpolate = true)
 		{
-			var newRotation = new Vector3(transform.eulerAngles.x, referenceTransform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
+			var new_rotation = new Vector3(transform.eulerAngles.x, reference_transform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
+			if(interpolate)
+				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new_rotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
+			else
+				transform.rotation = Quaternion.Euler(new_rotation);
 		}
 	}
 }

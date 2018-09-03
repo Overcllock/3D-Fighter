@@ -19,8 +19,18 @@ namespace game
 		void OnPlay()
 		{
 			Close();
-			root.Open<HUD>();
+			StartCoroutine(StartGame());
+		}
+
+		IEnumerator StartGame()
+		{
+			var wfeof = new WaitForEndOfFrame();
+			Main.self.StartGame();
+			while(Main.self.player == null || Main.self.opponent == null)
+				yield return wfeof;
+			Main.self.opponent.Spawn();
 			Main.self.player.Spawn();
+			root.Open<HUD>();
 		}
 
 		void Fill()

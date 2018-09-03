@@ -107,11 +107,16 @@ namespace game
 
 		void Awake()
 		{
+			Init();
+		}
+
+		public void Init()
+		{
 			abilites_queue = new Queue<Ability>();
 			abilites = new List<Ability>();
 			mctl = GetComponent<MovementController>();
 			actl = new AnimationController(GetComponent<Animator>(), this);
-
+			
 			InitCamera();
 			InitAbilites();
 		}
@@ -360,9 +365,13 @@ namespace game
 
 		public void Spawn()
 		{
-			transform.position = GameObject.Find("startpoint_1").transform.position;
+			transform.position = GameObject.Find("startpoint_" + (is_player ? "1" : "2")).transform.position;
+			if(is_player && Main.self.opponent != null)
+				mctl.RotateWithAnotherTransform(reference_transform: Main.self.opponent.transform, interpolate: false);
 			gameObject.SetActive(true);
-			OnSpawned();
+
+			if(is_player)
+				OnSpawned();
 		}
 
 		public void Release()

@@ -13,6 +13,7 @@ namespace game
 
 		public Account account = null;
 		public UI ui_root;
+		[HideInInspector]
 		public Character player;
 		[HideInInspector]
 		public Character opponent;
@@ -38,6 +39,24 @@ namespace game
 			StartCoroutine(AutoSave());
 		}
 
+		public void CreateCharacter(bool is_player = false)
+		{
+			Error.Assert(is_player && player == null || !is_player && opponent == null);
+
+			var character_prefab = Resources.Load("prefabs/" + (is_player ? "character" : "opponent"));
+			var startpoint = GameObject.Find("startpoint_" + (is_player ? "1" : "2")).transform;
+			var character_go = Instantiate(character_prefab) as GameObject;
+			var character = character_go.GetComponent<Character>();
+			character.Init();
+			character.is_player = is_player;
+			character_go.SetActive(false);
+
+			if(is_player)
+				player = character;
+			else
+				opponent = character;
+		}
+
 		public void SetPause(bool is_paused)
 		{
 			Time.timeScale = is_paused ? 0 : 1;
@@ -51,6 +70,13 @@ namespace game
 				if(pause_ui != null)
 					pause_ui.Close();
 			}
+		}
+
+		//NOTE: temporarily, in future will be moved to Matching
+		public void StartGame()
+		{
+			CreateCharacter();
+			CreateCharacter(is_player: true);
 		}
 
 		public void ForceQuit()
