@@ -14,9 +14,10 @@ namespace game
 
 		CharacterController cctl;
 		Animator animator;
+		Character character;
 		vThirdPersonCamera cam;
 
-		public float speed = 5.0f;
+		public float speed = 4.0f;
 		public bool moving_allowed;
 		public bool keep_camera_look_at;
 
@@ -26,16 +27,24 @@ namespace game
 		void Awake()
 		{
 			keep_camera_look_at = false;
-			cctl = gameObject.GetComponent<CharacterController>();
-			animator = gameObject.GetComponent<Animator>();
+			moving_allowed = true;
+			cctl = GetComponent<CharacterController>();
+			animator = GetComponent<Animator>();
 			cam = Camera.main.gameObject.GetComponent<vThirdPersonCamera>();
+			character = GetComponent<Character>();
 		}
 		
 		void FixedUpdate() 
 		{
+			if(character == null)
+			{
+				character = GetComponent<Character>();
+				return;
+			}
+
 			Move();
-			Main.self.player.is_moving = cctl.velocity.magnitude > MIN_VELOCITY_MAGNITUDE;
-			animator.SetBool("Run", Main.self.player.is_moving && !Main.self.player.is_use_ability);
+			character.is_moving = cctl.velocity.magnitude > MIN_VELOCITY_MAGNITUDE;
+			animator.SetBool("Run", character.is_moving && !character.is_use_ability);
 		}
 
 		void Move()
@@ -43,9 +52,16 @@ namespace game
 			var input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 			var mouse_input = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
-			if(moving_allowed)
-				MoveCharacter(input);
-			MoveCamera(mouse_input, keep_camera_look_at);
+			if(character.is_player)
+			{
+				if(moving_allowed)
+					MoveCharacter(input);
+				MoveCamera(mouse_input, keep_camera_look_at);
+			}
+			else
+			{
+				//TODO: move bot
+			}
 		}
 
 		void MoveCharacter(Vector2 input)
@@ -83,13 +99,18 @@ namespace game
 				cam.RotateCamera(mouse_input.x, mouse_input.y);
 		}
 
-		public void RotateWithAnotherTransform(Transform reference_transform, float angleOffset = 0.0f, bool interpolate = true)
+		public void RotateWithAnotherTransform(Transform reference_transform, float angleOffset = 0.0f)
 		{
 			var new_rotation = new Vector3(transform.eulerAngles.x, reference_transform.eulerAngles.y + angleOffset, transform.eulerAngles.z);
-			if(interpolate)
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new_rotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
-			else
-				transform.rotation = Quaternion.Euler(new_rotation);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new_rotation), STRAFE_ROTATION_SPEED * Time.fixedDeltaTime);
+		}
+
+		public void RotateTo(Transform target)
+		{
+			Vector3 target_dir = target.position - transform.position;
+			transform.rotation = Quaternion.LookRotation(target_dir);
+			if(cam != null)
+				cam.AutoRotateCamera(x: true, y: false);
 		}
 	}
 }

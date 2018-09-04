@@ -39,16 +39,17 @@ namespace game
 			StartCoroutine(AutoSave());
 		}
 
-		public void CreateCharacter(bool is_player = false)
+		public void CreateCharacter(bool is_player = false, bool is_dummy = false)
 		{
 			Error.Assert(is_player && player == null || !is_player && opponent == null);
 
-			var character_prefab = Resources.Load("prefabs/" + (is_player ? "character" : "opponent"));
+			var character_prefab = Resources.Load("prefabs/character");
 			var startpoint = GameObject.Find("startpoint_" + (is_player ? "1" : "2")).transform;
 			var character_go = Instantiate(character_prefab) as GameObject;
-			var character = character_go.GetComponent<Character>();
+			var character = character_go.AddComponentOnce<Character>();
 			character.Init();
 			character.is_player = is_player;
+			character.is_dummy = is_dummy;
 			character_go.SetActive(false);
 
 			if(is_player)
@@ -75,8 +76,15 @@ namespace game
 		//NOTE: temporarily, in future will be moved to Matching
 		public void StartGame()
 		{
-			CreateCharacter();
+			CreateCharacter(is_dummy: true);
 			CreateCharacter(is_player: true);
+		}
+
+		public void SyncCharactersRotation()
+		{
+			Error.Assert(player != null && opponent != null);
+			opponent.mctl.RotateTo(player.transform);
+			player.mctl.RotateTo(opponent.transform);
 		}
 
 		public void ForceQuit()

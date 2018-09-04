@@ -12,14 +12,19 @@ namespace game
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
+		}
+
+		public override void Tick(float dt)
+		{
+			base.Tick(dt);
+			if(inflictor.hud != null)
+				inflictor.hud.UpdateSkillButtonAlpha(conf.axis, CheckConditions());
 		}
 
 		public override bool CheckConditions()
 		{
-			//TODO:
-			return true;
+			return inflictor.has_control;
 		}
 	}
 }

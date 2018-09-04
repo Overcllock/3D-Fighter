@@ -33,7 +33,11 @@ namespace game
 
 		void OnMainMenu()
 		{
-			Main.self.player.Release();
+			if(Main.self.player != null)
+				Main.self.player.Release();
+			if(Main.self.opponent != null)
+				Main.self.opponent.Release();
+				
 			Main.self.SetPause(false);
 			root.CloseAll();
 			root.Open<MainWindow>();

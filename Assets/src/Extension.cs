@@ -29,6 +29,14 @@ namespace game
 			return GameObject.Instantiate(prefab, o.transform) as GameObject;
 		}
 
+		public static T AddComponentOnce<T>(this GameObject self) where T : Component
+		{
+			T c = self.GetComponent<T>();
+			if(c == null)
+				c = self.AddComponent<T>();
+			return c;
+		}
+
 		public static Transform FindRecursive(this Transform current, string name)   
 		{
 			for(int i = 0; i < current.childCount; ++i)

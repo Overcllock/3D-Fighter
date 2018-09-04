@@ -28,9 +28,10 @@ namespace game
 			Main.self.StartGame();
 			while(Main.self.player == null || Main.self.opponent == null)
 				yield return wfeof;
+			root.Open<HUD>();
 			Main.self.opponent.Spawn();
 			Main.self.player.Spawn();
-			root.Open<HUD>();
+			Main.self.SyncCharactersRotation();
 		}
 
 		void Fill()
