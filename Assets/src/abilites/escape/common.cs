@@ -2,7 +2,7 @@ namespace game
 {
     public class Escape : Ability
 	{
-		const string CONF_PATH = "config/abilites/escape/conf.json";
+		const string CONF_PATH = "/config/abilites/escape/conf.json";
 
 		public Escape(Character inflictor) : base()
 		{

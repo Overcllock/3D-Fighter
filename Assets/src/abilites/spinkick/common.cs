@@ -5,7 +5,7 @@ namespace game
 {
     public class Spinkick : Ability
 	{
-		const string CONF_PATH = "config/abilites/spinkick/conf.json";
+		const string CONF_PATH = "/config/abilites/spinkick/conf.json";
 
 		Character damaged = null;
 

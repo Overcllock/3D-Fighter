@@ -9,7 +9,7 @@ namespace game
 {
 	public class Account 
 	{
-		public static readonly string SAVEFILE_PATH = "userdata/account.json";
+		public static readonly string SAVEFILE_PATH = "/userdata/account.json";
 
 		public string name;
 		public uint rate;
@@ -58,8 +58,8 @@ namespace game
 		{
 			try
 			{
-				if(!Directory.Exists("userdata"))
-					Directory.CreateDirectory("userdata");
+				if(!Directory.Exists(Application.streamingAssetsPath + "/userdata"))
+					Directory.CreateDirectory(Application.streamingAssetsPath + "/userdata");
 
 				var account = JSON.ReadConfig<Account>(SAVEFILE_PATH);
 				if(account != null)

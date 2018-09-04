@@ -2,7 +2,7 @@ namespace game
 {
     public class Dodge : Ability
 	{
-		const string CONF_PATH = "config/abilites/dodge/conf.json";
+		const string CONF_PATH = "/config/abilites/dodge/conf.json";
 
 		public Dodge(Character inflictor) : base()
 		{

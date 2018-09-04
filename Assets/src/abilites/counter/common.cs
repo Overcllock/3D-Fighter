@@ -2,7 +2,7 @@ namespace game
 {
     public class Counter : Ability
 	{
-		const string CONF_PATH = "config/abilites/counter/conf.json";
+		const string CONF_PATH = "/config/abilites/counter/conf.json";
 		
 		public Counter(Character inflictor) : base()
 		{

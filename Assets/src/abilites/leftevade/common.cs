@@ -5,7 +5,7 @@ namespace game
 {
     public class LeftEvade : Evade
 	{
-		const string CONF_PATH = "config/abilites/leftevade/conf.json";
+		const string CONF_PATH = "/config/abilites/leftevade/conf.json";
 
 		public LeftEvade(Character inflictor) : base()
 		{
@@ -17,7 +17,7 @@ namespace game
 		{
 			base.Use();
 
-			var target = inflictor.FindNearestTarget(conf.radius);
+			var target = inflictor.FindNearestCharacter(conf.radius);
 			inflictor.StartCoroutine(Move(target.transform.position, Vector3.up, conf.delay / 2));
 		}
 	}

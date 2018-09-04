@@ -141,7 +141,7 @@ namespace game
 
 		void InitAbilites()
 		{
-			var confs = JSON.ReadDirectory<AbilityConf>(@"config/abilites");
+			var confs = JSON.ReadDirectory<AbilityConf>("/config/abilites");
 			for(int i = 0; i < confs.Count; ++i)
 			{
 				var conf = confs[i];
@@ -224,7 +224,7 @@ namespace game
 			}
 		}
 
-		public Character FindNearestTarget(float radius = Mathf.Infinity)
+		public Character FindNearestCharacter(float radius = Mathf.Infinity)
 		{
 			var ray = new Ray(transform.position, transform.forward);
 			var hits = Physics.SphereCastAll(ray, 0.5f, radius);
@@ -255,7 +255,7 @@ namespace game
 
 		public bool HasTargetInRadius(float radius)
 		{
-			return FindNearestTarget(radius) != null;
+			return FindNearestCharacter(radius) != null;
 		}
 
 		void ProcessInput()
@@ -335,7 +335,7 @@ namespace game
 
 		public Character TryDamage(float radius, float min, float max, bool wait_for_distance = false)
 		{
-			var nearest_target = FindNearestTarget(radius);
+			var nearest_target = FindNearestCharacter(radius);
 
 			if(nearest_target != null && !nearest_target.is_invulnerable)
 			{

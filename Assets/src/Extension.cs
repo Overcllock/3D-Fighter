@@ -76,7 +76,7 @@ namespace game
 	{
 		public static List<T> ReadDirectory<T>(string dir_path)
 		{
-			var files = Directory.GetFiles(dir_path, "*.json", SearchOption.AllDirectories);
+			var files = Directory.GetFiles(Application.streamingAssetsPath + dir_path, "*.json", SearchOption.AllDirectories);
 			var objects = new List<T>();
 			for(int i = 0; i < files.Length; ++i)
 			{
@@ -85,7 +85,7 @@ namespace game
 
 				try 
 				{
-					obj = JSON.ReadConfig<T>(filepath);
+					obj = JSON.ReadConfig<T>(filepath.Replace(Application.streamingAssetsPath, string.Empty));
 				}
 				catch (Exception ex)
 				{
@@ -101,7 +101,7 @@ namespace game
 		public static T ReadConfig<T>(string path)
 		{
 			T data = default(T);
-			using (StreamReader reader = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read)))
+			using (StreamReader reader = new StreamReader(new FileStream(Application.streamingAssetsPath + path, FileMode.Open, FileAccess.Read)))
 			{
 				data = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
 			}
@@ -110,7 +110,7 @@ namespace game
 
 		public static void WriteConfig<T>(string path, T obj)
 		{
-			using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write)))
+			using (StreamWriter writer = new StreamWriter(new FileStream(Application.streamingAssetsPath + path, FileMode.OpenOrCreate, FileAccess.Write)))
 			{
 				string data = JsonConvert.SerializeObject(obj, Formatting.Indented);
 				writer.Write(data);

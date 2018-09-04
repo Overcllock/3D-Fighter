@@ -2,7 +2,7 @@ namespace game
 {
     public class Headspring : Ability
 	{
-		const string CONF_PATH = "config/abilites/headspring/conf.json";
+		const string CONF_PATH = "/config/abilites/headspring/conf.json";
 
 		public Headspring(Character inflictor) : base()
 		{
