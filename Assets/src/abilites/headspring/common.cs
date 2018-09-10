@@ -18,8 +18,7 @@ namespace game
 
 		public override bool CheckConditions()
 		{
-			//TODO:
-			return true;
+			return !inflictor.has_control;
 		}
 	}
 }

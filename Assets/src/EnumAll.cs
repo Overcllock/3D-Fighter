@@ -18,4 +18,10 @@ namespace game
 		STUN,
 		GROUND
 	}
+
+	public enum EnumMatchScore
+	{
+		PlayerScore,
+		EnemyScore
+	}
 }

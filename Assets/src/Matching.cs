@@ -26,4 +26,31 @@ namespace game
             return 0;
         }
     }
+
+    public class Match
+    {
+        //NOTE: time in seconds
+        //NOTE: this is time for fast tests. Original time is 180 seconds
+        const float MATCH_TIME = 45.0f;
+
+        public uint round;
+        public uint[] score;
+
+        float start_timestamp;
+        float end_timestamp;
+
+        public Match()
+        {
+            round = 0;
+            score = new uint[] { 0, 0 };
+        }
+
+        public void StartRound()
+        {
+            round++;
+            start_timestamp = Time.time;
+            end_timestamp = start_timestamp + MATCH_TIME;
+            Debug.Log("Match started at " + start_timestamp);
+        }
+    }
 }

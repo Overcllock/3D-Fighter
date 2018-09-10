@@ -25,7 +25,7 @@ namespace game
 
 		public override bool CheckConditions()
 		{
-			return inflictor.HasTargetInRadius(conf.radius);
+			return !inflictor.has_control && inflictor.HasTargetInRadius(conf.radius);
 		}
 
 		public override void Defer()

@@ -26,7 +26,9 @@ namespace game
 
 		public override bool CheckConditions()
 		{
-			return inflictor.active_ability != null && inflictor.active_ability.conf.anim_state == "Jab";
+			return !inflictor.has_control && 
+				   inflictor.active_ability != null && 
+				   inflictor.active_ability.conf.anim_state == "Jab";
 		}
 
 		public override void Defer()

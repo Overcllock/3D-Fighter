@@ -8,6 +8,8 @@ namespace game
 	public class RegWindow : UIWindow 
 	{
 		public static readonly string PREFAB = "prefabs/SignUp";
+		
+		const int MIN_NAME_LENGTH = 3;
 
 		InputField username_input;
 
@@ -22,12 +24,26 @@ namespace game
 		public void OnSubmit()
 		{
 			string username = username_input.text;
-			if(username == string.Empty)
+			string errormsg = string.Empty;
+			bool ok = true;
+
+			if(username.Length == 0)
+			{
+				ok = false;
+				errormsg = "Заполните все поля.";
+			}
+			else if(username.Length < MIN_NAME_LENGTH)
+			{
+				ok = false;
+				errormsg = "Длина имени должна быть не менее " +  MIN_NAME_LENGTH + " символов.";
+			}
+			
+			if(!ok)
 			{
 				root.Open<ErrorPopup>((wnd) => { 
-					(wnd as ErrorPopup).SetErrorMessage("Заполните все поля."); 
+					(wnd as ErrorPopup).SetErrorMessage(errormsg); 
 				});
-				Debug.LogWarning("Username field is empty.");
+				Debug.LogWarning("Username field is empty or too small.");
 				return;
 			}
 

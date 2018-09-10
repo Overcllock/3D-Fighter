@@ -342,8 +342,8 @@ namespace game
 				if(wait_for_distance)
 				{
 					var dist = Vector3.Distance(transform.position, nearest_target.transform.position);
-					StartCoroutine(Main.WaitAndDo(
-						() => {
+					StartCoroutine(Main.WaitAndDo(() => 
+						{
 							TryDamage(radius, min, max);
 						}, 
 						dist / (mctl.speed * 1.5f)

@@ -12,14 +12,12 @@ namespace game
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
 		}
 
 		public override bool CheckConditions()
 		{
-			//TODO:
-			return true;
+			return !inflictor.has_control;
 		}
 	}
 }

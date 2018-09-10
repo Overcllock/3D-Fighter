@@ -12,15 +12,13 @@ namespace game
 
 		protected override void Use()
 		{
-			//TODO:
 			base.Use();
 			inflictor.is_freeze = true;
 		}
 
 		public override bool CheckConditions()
 		{
-			//TODO:
-			return true;
+			return !inflictor.has_control;
 		}
 
 		public override void Defer()

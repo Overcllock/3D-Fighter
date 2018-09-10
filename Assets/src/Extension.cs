@@ -85,7 +85,7 @@ namespace game
 
 				try 
 				{
-					obj = JSON.ReadConfig<T>(filepath.Replace(Application.streamingAssetsPath, string.Empty));
+					obj = JSON.ReadConfig<T>(dir_path);
 				}
 				catch (Exception ex)
 				{

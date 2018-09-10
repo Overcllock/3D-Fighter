@@ -27,9 +27,11 @@ namespace game
 					vfx: "stun",
 					OnStart: new UnityAction(() => {
 						damaged.actl.FreezeAnim();
+						damaged.mctl.moving_allowed = false;
 					}),
 					OnFinish: new UnityAction(() => {
 						damaged.actl.UnfreezeAnim();
+						damaged.mctl.moving_allowed = true;
 					})
 				));
 			}
@@ -37,7 +39,7 @@ namespace game
 
 		public override bool CheckConditions()
 		{
-			return true;
+			return !inflictor.has_control;
 		}
 	}
 }

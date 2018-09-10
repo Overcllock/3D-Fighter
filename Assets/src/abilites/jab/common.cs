@@ -20,7 +20,7 @@ namespace game
 
 		public override bool CheckConditions()
 		{
-			return true;
+			return !inflictor.has_control;
 		}
 	}
 }
