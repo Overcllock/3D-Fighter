@@ -50,7 +50,7 @@ namespace game
 			defeat_info.text = acc.loses.ToString();
 			rate_info.text = acc.winrate.ToString() + '%';
 
-			var conf_data = JSON.ReadConfig<Dictionary<EnumLeague, string[]>>("/config/league_sprites.json");
+			var conf_data = JSON.ReadConfig<Dictionary<EnumLeague, string[]>>(Application.streamingAssetsPath + "/config/league_sprites.json");
 			league_info.sprite = Resources.Load<Sprite>(conf_data[acc.league][0]);
 			rank_info_anim.sprite = Resources.Load<Sprite>(conf_data[acc.league][1]);
 		}

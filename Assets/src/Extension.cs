@@ -83,9 +83,9 @@ namespace game
 				var filepath = files[i];
 				T obj = default(T);
 
-				try 
+				try
 				{
-					obj = JSON.ReadConfig<T>(dir_path);
+					obj = JSON.ReadConfig<T>(filepath);
 				}
 				catch (Exception ex)
 				{
@@ -101,7 +101,7 @@ namespace game
 		public static T ReadConfig<T>(string path)
 		{
 			T data = default(T);
-			using (StreamReader reader = new StreamReader(new FileStream(Application.streamingAssetsPath + path, FileMode.Open, FileAccess.Read)))
+			using (StreamReader reader = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.ReadWrite)))
 			{
 				data = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
 			}
@@ -110,7 +110,7 @@ namespace game
 
 		public static void WriteConfig<T>(string path, T obj)
 		{
-			using (StreamWriter writer = new StreamWriter(new FileStream(Application.streamingAssetsPath + path, FileMode.OpenOrCreate, FileAccess.Write)))
+			using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
 			{
 				string data = JsonConvert.SerializeObject(obj, Formatting.Indented);
 				writer.Write(data);

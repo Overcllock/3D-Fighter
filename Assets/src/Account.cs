@@ -61,7 +61,7 @@ namespace game
 				if(!Directory.Exists(Application.streamingAssetsPath + "/userdata"))
 					Directory.CreateDirectory(Application.streamingAssetsPath + "/userdata");
 
-				var account = JSON.ReadConfig<Account>(SAVEFILE_PATH);
+				var account = JSON.ReadConfig<Account>(Application.streamingAssetsPath + SAVEFILE_PATH);
 				if(account != null)
 				{
 					Debug.Log("Account loaded successfully.");
@@ -81,10 +81,10 @@ namespace game
 		{
 			try
 			{
-				if(!Directory.Exists("userdata"))
-					Directory.CreateDirectory("userdata");
+				if(!Directory.Exists(Application.streamingAssetsPath + "/userdata"))
+					Directory.CreateDirectory(Application.streamingAssetsPath + "/userdata");
 
-				JSON.WriteConfig(SAVEFILE_PATH, account);
+				JSON.WriteConfig(Application.streamingAssetsPath + SAVEFILE_PATH, account);
 				Debug.Log("Account saved successfully.");
 			}
 			catch (Exception ex)

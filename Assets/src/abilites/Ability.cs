@@ -79,7 +79,7 @@ namespace game
 		{
 			try
 			{
-				conf = JSON.ReadConfig<AbilityConf>(conf_path);
+				conf = JSON.ReadConfig<AbilityConf>(Application.streamingAssetsPath + conf_path);
 			}
 			catch(Exception ex)
 			{
